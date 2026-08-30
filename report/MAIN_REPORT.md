@@ -140,7 +140,11 @@ Baseline AI gợi ý là 20 VU, ramp-up 120 giây và giữ 8 phút. Cấu hình
 | --- | --- | --- |
 | Dùng workflow admin với mutation liên tục | Conditional | Bổ sung unique run/VU data để tránh coupon collision |
 | Dùng Bearer token sau login | Correct | Trích `$.token`, assert non-empty |
-| `TODO (REAL REVIEW ITEM)` | TODO | TODO |
+| Không cấu hình Listener nào trong các file JMX (Load, Stress, v.v.) dù đã yêu cầu trong Profile | Incorrect | AI tập trung vào logic tạo tải mà bỏ qua phần trích xuất report. Đã tự add thêm Summary/Aggregate Report vào từng Thread Group. |
+| Bỏ sót Response Assertion ở các API quan trọng | Incorrect | AI giả định mọi request đều trả về 200 OK hợp lệ (Happy path). Đã tự thêm Assertion để check response code và chuỗi "Product created". |
+| Bỏ quên cơ chế bẫy lỗi Account Lockout (sai 3 lần khóa 180s) | Incorrect | LLM không mô phỏng được trạng thái DB thực tế (Stateful) khi chịu tải. Đã ghi nhận để chú ý khi chạy tải. |
+| Sử dụng Include Controller với đường dẫn CSV tương đối `../test-data/admin_credentials.csv` | Conditional | Rất dễ gây lỗi File Not Found khi mở bằng JMeter GUI ở thư mục khác. Đã sửa lại thành đường dẫn tuyệt đối tới file CSV. |
+| Sử dụng UltimateThreadGroup cho Stress/Spike test mà không báo trước | Incorrect | File JMX sẽ bị lỗi khi mở nếu JMeter chưa cài Custom Thread Groups plugin. Cần cài đặt plugin qua JMeter Plugins Manager để chạy được kịch bản Stress và Spike. |
 
 ### 7.3 Execution evidence và kết quả
 
