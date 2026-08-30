@@ -344,11 +344,11 @@ Các giới hạn bắt buộc thảo luận nếu áp dụng: SUT và load gene
 
 | Artifact | Đường dẫn/link thực | Trạng thái |
 | --- | --- | --- |
-| Load JMX/CSV/JTL/HTML | TODO | Missing real evidence |
-| Stress JMX/CSV/JTL/HTML | TODO | Missing real evidence |
-| Spike JMX/CSV/JTL/HTML | TODO | Missing real evidence |
-| Soak JTL/report | TODO | Missing real evidence |
-| Hardware/resource screenshots | TODO | Missing real evidence |
+| Load JMX/CSV/JTL/HTML | `jmeter/23127104_Load_20260830.jmx`, `test-data/admin_credentials.csv`, `results/23127104_Load_20260830.jtl`, `results/load-report/` | Đã có |
+| Stress JMX/CSV/JTL/HTML | `jmeter/23127104_Stress_20260830.jmx`, `test-data/admin_credentials.csv`, `results/23127104_Stress_20260830.jtl`, `results/stress-report/` | Đã có |
+| Spike JMX/CSV/JTL/HTML | `jmeter/23127104_Spike_20260830.jmx`, `test-data/admin_credentials.csv`, `results/23127104_Spike_20260830.jtl`, `results/spike-report/` | Đã có |
+| Soak JTL/report | `jmeter/23127104_Soak_20260830.jmx`, `test-data/admin_credentials.csv`, `results/23127104_Soak_20260830.jtl`, `results/soak-report/` | Đã có |
+| Hardware/resource screenshots | `evidence/23127104_Hardware_20260830.png`, `evidence/23127104_Load_Evidence_20260830.png`, `evidence/23127104_Stress_Evidence_20260830.png`, `evidence/23127104_Spike_Evidence_20260830.png`, `evidence/23127104_Soak_Evidence_20260830.png` | Đã có |
 | Server logs/run notes | TODO | Missing real evidence |
 | GitHub Issues | TODO | Missing or none observed |
 | Demo video | TODO | Missing real evidence |
