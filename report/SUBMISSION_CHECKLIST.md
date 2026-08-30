@@ -32,6 +32,7 @@
 - [ ] README có self-assessment và test summary.
 - [ ] Public GitHub repository URL.
 - [ ] GitHub Issue links/screenshots cho lỗi thật, hoặc ghi rõ không quan sát thấy issue.
+- [x] Local `report/BUG_REPORT.md` có BUG-SPIKE-001 và BUG-STRESS-001; vẫn cần GitHub Issue URL/screenshot nếu xác nhận SUT defect.
 - [ ] YouTube unlisted >=6 phút, tiếng Việt, tool + resource monitor cùng frame.
 - [ ] Video demo Agent Skill end-to-end trên một endpoint group.
 

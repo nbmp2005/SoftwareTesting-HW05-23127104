@@ -1,0 +1,135 @@
+{
+  "6 - POST create coupon": {
+    "samples": 317,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 1.3236,
+    "duration_seconds": 239.504,
+    "elapsed_ms": {
+      "mean": 10.142,
+      "min": 3.0,
+      "median": 9.0,
+      "p90": 16.0,
+      "p95": 17.0,
+      "p99": 19.0,
+      "max": 33.0
+    },
+    "response_codes": {
+      "200": 317
+    }
+  },
+  "1 - Login admin": {
+    "samples": 320,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 1.3386,
+    "duration_seconds": 239.054,
+    "elapsed_ms": {
+      "mean": 2.781,
+      "min": 1.0,
+      "median": 2.0,
+      "p90": 4.0,
+      "p95": 5.0,
+      "p99": 13.62,
+      "max": 26.0
+    },
+    "response_codes": {
+      "200": 320
+    }
+  },
+  "3 - GET coupons": {
+    "samples": 317,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 1.3281,
+    "duration_seconds": 238.691,
+    "elapsed_ms": {
+      "mean": 11.596,
+      "min": 4.0,
+      "median": 9.0,
+      "p90": 19.0,
+      "p95": 28.2,
+      "p99": 38.52,
+      "max": 63.0
+    },
+    "response_codes": {
+      "200": 317
+    }
+  },
+  "4 - POST create category": {
+    "samples": 315,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 1.3255,
+    "duration_seconds": 237.651,
+    "elapsed_ms": {
+      "mean": 9.851,
+      "min": 4.0,
+      "median": 9.0,
+      "p90": 15.0,
+      "p95": 17.0,
+      "p99": 19.86,
+      "max": 27.0
+    },
+    "response_codes": {
+      "200": 315
+    }
+  },
+  "5 - POST create product": {
+    "samples": 315,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 1.3263,
+    "duration_seconds": 237.502,
+    "elapsed_ms": {
+      "mean": 9.248,
+      "min": 4.0,
+      "median": 8.0,
+      "p90": 15.0,
+      "p95": 17.0,
+      "p99": 19.86,
+      "max": 26.0
+    },
+    "response_codes": {
+      "200": 315
+    }
+  },
+  "2 - GET admin users": {
+    "samples": 318,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 1.3358,
+    "duration_seconds": 238.063,
+    "elapsed_ms": {
+      "mean": 2.437,
+      "min": 1.0,
+      "median": 2.0,
+      "p90": 3.0,
+      "p95": 4.0,
+      "p99": 10.49,
+      "max": 21.0
+    },
+    "response_codes": {
+      "200": 318
+    }
+  },
+  "__overall__": {
+    "samples": 1902,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 7.9414,
+    "duration_seconds": 239.504,
+    "elapsed_ms": {
+      "mean": 7.661,
+      "min": 1.0,
+      "median": 8.0,
+      "p90": 14.0,
+      "p95": 17.0,
+      "p99": 27.0,
+      "max": 63.0
+    },
+    "response_codes": {
+      "200": 1902
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "1 - Login admin": {
+    "samples": 528,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 3.8043,
+    "duration_seconds": 138.791,
+    "elapsed_ms": {
+      "mean": 2.616,
+      "min": 1.0,
+      "median": 2.0,
+      "p90": 4.0,
+      "p95": 5.0,
+      "p99": 8.0,
+      "max": 39.0
+    },
+    "response_codes": {
+      "200": 528
+    }
+  },
+  "2 - GET admin users": {
+    "samples": 523,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 3.8063,
+    "duration_seconds": 137.405,
+    "elapsed_ms": {
+      "mean": 2.327,
+      "min": 1.0,
+      "median": 2.0,
+      "p90": 3.0,
+      "p95": 4.0,
+      "p99": 8.0,
+      "max": 18.0
+    },
+    "response_codes": {
+      "200": 523
+    }
+  },
+  "3 - GET coupons": {
+    "samples": 516,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 3.8126,
+    "duration_seconds": 135.341,
+    "elapsed_ms": {
+      "mean": 5.211,
+      "min": 2.0,
+      "median": 5.0,
+      "p90": 7.0,
+      "p95": 9.0,
+      "p99": 19.55,
+      "max": 47.0
+    },
+    "response_codes": {
+      "200": 516
+    }
+  },
+  "4 - POST create category": {
+    "samples": 513,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 3.801,
+    "duration_seconds": 134.965,
+    "elapsed_ms": {
+      "mean": 8.023,
+      "min": 4.0,
+      "median": 7.0,
+      "p90": 12.0,
+      "p95": 15.0,
+      "p99": 17.88,
+      "max": 24.0
+    },
+    "response_codes": {
+      "200": 513
+    }
+  },
+  "5 - POST create product": {
+    "samples": 508,
+    "failures": 0,
+    "error_rate_percent": 0.0,
+    "throughput_samples_per_second": 3.8044,
+    "duration_seconds": 133.53,
+    "elapsed_ms": {
+      "mean": 7.616,
+      "min": 4.0,
+      "median": 7.0,
+      "p90": 10.0,
+      "p95": 13.0,
+      "p99": 17.0,
+      "max": 23.0
+    },
+    "response_codes": {
+      "200": 508
+    }
+  },
+  "6 - POST create coupon": {
+    "samples": 504,
+    "failures": 338,
+    "error_rate_percent": 67.0635,
+    "throughput_samples_per_second": 3.8144,
+    "duration_seconds": 132.132,
+    "elapsed_ms": {
+      "mean": 4.129,
+      "min": 1.0,
+      "median": 3.0,
+      "p90": 8.0,
+      "p95": 9.0,
+      "p99": 12.0,
+      "max": 23.0
+    },
+    "response_codes": {
+      "200": 166,
+      "500": 338
+    }
+  },
+  "__overall__": {
+    "samples": 3092,
+    "failures": 338,
+    "error_rate_percent": 10.9314,
+    "throughput_samples_per_second": 22.2763,
+    "duration_seconds": 138.802,
+    "elapsed_ms": {
+      "mean": 4.965,
+      "min": 1.0,
+      "median": 4.0,
+      "p90": 9.0,
+      "p95": 10.0,
+      "p99": 16.0,
+      "max": 47.0
+    },
+    "response_codes": {
+      "200": 2754,
+      "500": 338
+    }
+  }
+}

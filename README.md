@@ -18,15 +18,16 @@ Repository cho HW05 – Performance Testing, Workflow 5: **Admin Catalog & Promo
 
 | Scenario | Plan | Workload thực tế | Report view | p95 | Error rate | Throughput | Trạng thái |
 | --- | --- | --- | --- | ---: | ---: | ---: | --- |
-| Load | `TODO (REAL EXECUTION DATE)` | `TODO (REAL EVIDENCE REQUIRED)` | Summary Report | TODO | TODO | TODO | Chưa chạy |
-| Stress | `TODO (REAL EXECUTION DATE)` | `TODO (REAL EVIDENCE REQUIRED)` | Aggregate Report | TODO | TODO | TODO | Chưa chạy |
-| Spike | `TODO (REAL EXECUTION DATE)` | `TODO (REAL EVIDENCE REQUIRED)` | View Results Tree (debug; disabled for full load nếu áp dụng) | TODO | TODO | TODO | Chưa chạy |
+| Load | `23127104_Load_20260830.jmx` | 10 VU, ramp 30s, total duration 330s; 2.516 samples | Summary Report + HTML | 17 ms | 0% | 7,6773 samples/s | Ổn định theo HTTP/JTL; chưa phải capacity threshold |
+| Stress | `23127104_Stress_20260830.jmx` | 10→20→30→40→50 VU; whole-run 15.445 samples | Aggregate + HTML | 14 ms (whole-run) | 10,8773% | 22,1151 samples/s | Invalid for capacity: 1.680 coupon HTTP 500 do stage data collision |
+| Spike | `23127104_Spike_20260830.jmx` | 8 VU pre → 40 VU burst → 8 VU recovery; whole-run 2.332 samples | HTML report | 16 ms (whole-run) | 5,4031% | 12,8737 samples/s | Failed: 126 HTTP 500 ở create coupon; cần stage analysis |
+| Soak | `23127104_Soak_20260830.jmx` | 10 VU, khoảng 12 phút; 5.634 samples | HTML report | 17 ms | 0% | 7,8395 samples/s | JTL ổn định; thiếu resource trend để công bố threshold |
 
 **Endpoint groups covered:** auth-heavy, read-heavy, transactional trong cùng workflow.
 
-**Endurance threshold:** `TODO (REAL 10–15 MINUTE SOAK EVIDENCE REQUIRED)`.
+**Endurance threshold:** `TODO (REAL START/MID/END RESOURCE EVIDENCE REQUIRED)`; candidate 10 VU có 0% error và p95 17 ms trong khoảng 12 phút.
 
-**Bugs/performance issues:** `TODO (REAL OBSERVATIONS AND GITHUB ISSUE LINKS REQUIRED)`.
+**Bugs/performance issues:** 2 scenario findings trong [BUG_REPORT.md](report/BUG_REPORT.md): Spike có 126 coupon HTTP 500; Stress có 1.680 coupon HTTP 500 với pattern xác nhận stage data collision. Load và Soak không ghi nhận issue trong raw JTL.
 
 **Demo video:** `TODO (REAL UNLISTED YOUTUBE URL REQUIRED)`.
 

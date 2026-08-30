@@ -396,3 +396,98 @@ Profile Matrix r1.1 đã được user duyệt rõ ràng. STEP_3_PROFILE_APPROVE
 Đã kiểm tra cấu trúc JMX mới do user cung cấp. Xác nhận user đã áp dụng giải pháp thủ công (nhiều Thread Group cơ bản + Delay) thay cho UltimateThreadGroup, khắc phục triệt để lỗi thiếu Plugin. Đã xác nhận user loại bỏ IncludeController để nhúng trực tiếp API. Đã hướng dẫn user đồng bộ hóa kiến trúc này từ file Stress sang 3 file còn lại (Load, Spike, Soak) và dùng đường dẫn CSV tuyệt đối để tránh lỗi File Not Found khi chạy non-GUI.
 ```
 
+# Prompt 17:
+- Name of the AI tool: OpenAI Codex
+- Date/time: 2026-08-30T19:48:11+07:00
+- Prompt:
+```
+# Context from my IDE setup:
+
+## Active file: jmeter/23127104_Soak_20260830.jmx
+
+## Open tabs:
+- 23127104_Soak_20260830.jmx: jmeter/23127104_Soak_20260830.jmx
+- 23127104_Spike_20260830.jmx: jmeter/23127104_Spike_20260830.jmx
+- 23127104_Load_20260830.jmx: jmeter/23127104_Load_20260830.jmx
+- 23127104_Load_20260830 (1).jmx: jmeter/23127104_Load_20260830 (1).jmx
+- 23127104_Stress_20260830.jmx: jmeter/23127104_Stress_20260830.jmx
+
+## My request:
+Dùng skill jtl-data-analyzer. Phân tích raw JTL results/load/23127104\_load\_20260830.jtl&#x20;
+cho scenario Load. Viết bug report nếu có bug
+```
+- AI Output:
+```
+Đã chạy parser bắt buộc trên raw JTL thực `results/23127104_Load_20260830.jtl` và tạo `results/23127104_Load_20260830_analysis.json`. Kết quả Load: 2.516 samples, 0 failures, error rate 0%, toàn bộ HTTP 200, throughput overall 7,6773 samples/s, mean 7,411 ms, p95 17 ms, p99 21,85 ms và max 102 ms. Sample count, failure count và p95 được cross-check với JMeter HTML report, đều có delta bằng 0. Không quan sát thấy bug hoặc performance issue trong raw JTL nên không tạo bug report/GitHub Issue. Đã cập nhật Mục 7.3, 12, 13 trong `report/MAIN_REPORT.md` và Load summary trong `README.md`; chưa tuyên bố capacity threshold hay root cause vì thiếu nhiều mức tải và resource trend đồng bộ.
+```
+
+# Prompt 18:
+- Name of the AI tool: OpenAI Codex
+- Date/time: 2026-08-30T19:55:42+07:00
+- Prompt:
+```
+# Context from my IDE setup:
+
+## Active file: results/23127104_Load_20260830_analysis.json
+
+## Open tabs:
+- 23127104_Load_20260830_analysis.json: results/23127104_Load_20260830_analysis.json
+- 23127104_Soak_20260830.jmx: jmeter/23127104_Soak_20260830.jmx
+- 23127104_Spike_20260830.jmx: jmeter/23127104_Spike_20260830.jmx
+- 23127104_Load_20260830.jmx: jmeter/23127104_Load_20260830.jmx
+- 23127104_Load_20260830 (1).jmx: jmeter/23127104_Load_20260830 (1).jmx
+
+## My request:
+[$ai-audit-logger](C:\Users\cpshc\Y3\SoftwareTesting\SoftwareTesting-HW05\SoftwareTesting-HW05-23127104\\.agents\skills\ai-audit-logger\SKILL.md) Dùng skill jtl-data-analyzer. Phân tích raw JTL&#x20;
+cho scenario spike. Viết bug report nếu có bug
+```
+- AI Output:
+```
+Đã chạy parser bắt buộc trên `results/23127104_Spike_20260830.jtl`, tạo và xác minh `results/23127104_Spike_20260830_analysis.json`. Whole-run có 2.332 samples, 126 failures, error rate 5,4031%, throughput 12,8737 samples/s và p95 16 ms. Tất cả failure tập trung ở `6 - POST create coupon`: 126/367 failures (34,3324%), gồm 241 HTTP 200 và 126 HTTP 500. Cross-check JMeter HTML cho overall sample count, failure count và p95 đều delta 0. Đã tạo `report/BUG_REPORT_SPIKE_COUPON_500.md`, ghi symptom đã xác nhận nhưng root cause chưa xác nhận; collision coupon code giữa các Thread Group là giả thuyết cần rerun với payload duy nhất và server log. Không kết luận overload/recovery vì parser aggregate chưa chia phase. Đã đồng bộ `report/MAIN_REPORT.md`, `README.md` và `report/SUBMISSION_CHECKLIST.md`.
+```
+
+# Prompt 19:
+- Name of the AI tool: OpenAI Codex
+- Date/time: 2026-08-30T20:08:45+07:00
+- Prompt:
+```
+# Context from my IDE setup:
+
+## Open tabs:
+- BUG_REPORT.md: report/BUG_REPORT.md
+- BUG_REPORT_SPIKE_COUPON_500.md: report/BUG_REPORT_SPIKE_COUPON_500.md
+- MAIN_REPORT.md: report/MAIN_REPORT.md
+- 23127104_Load_20260830_analysis.json: results/23127104_Load_20260830_analysis.json
+- 23127104_Soak_20260830.jmx: jmeter/23127104_Soak_20260830.jmx
+
+## My request:
+**Dùng skill jtl-data-analyzer. Phân tích raw JTL&#x20;&#xD;**
+cho scenario stress. Viết bug report nếu có bug
+```
+- AI Output:
+```
+Đã chạy parser canonical trên `results/23127104_Stress_20260830.jtl`, tạo `results/23127104_Stress_20260830_analysis.json` và tách deterministic năm stage để phân tích bằng cùng parser. Whole-run có 15.445 samples, 1.680 failures, error rate 10,8773%, throughput 22,1151 samples/s và p95 14 ms; toàn bộ failure thuộc `POST create coupon` với 1.680/2.519 failures (66,6931%), đều HTTP 500. Stage 1 tại 10 VU có 0% lỗi; Stage 2–5 có error rate overall lần lượt 8,0911%, 10,9314%, 12,2271% và 13,0596%. Coupon failures của mỗi stage sau bằng đúng coupon samples stage trước (167=167, 338=338, 504=504, 671=671), xác nhận test-data/counter collision với độ tin cậy cao. Vì vậy run không hợp lệ để xác định capacity threshold và không được diễn giải là SUT saturation. Đã append BUG-STRESS-001 vào `report/BUG_REPORT.md`, đồng bộ `report/MAIN_REPORT.md`, `README.md`, checklist và tạo stage JSON trong `results/stress-stage-analysis/`. Cross-check JMeter HTML cho sample count, failure count và p95 đều delta 0; parser tests đạt 2/2.
+```
+
+# Prompt 20:
+- Name of the AI tool: OpenAI Codex
+- Date/time: 2026-08-30T20:14:44+07:00
+- Prompt:
+```
+# Context from my IDE setup:
+
+## Open tabs:
+- BUG_REPORT.md: report/BUG_REPORT.md
+- BUG_REPORT_SPIKE_COUPON_500.md: report/BUG_REPORT_SPIKE_COUPON_500.md
+- MAIN_REPORT.md: report/MAIN_REPORT.md
+- 23127104_Load_20260830_analysis.json: results/23127104_Load_20260830_analysis.json
+- 23127104_Soak_20260830.jmx: jmeter/23127104_Soak_20260830.jmx
+
+## My request:
+[$ai-audit-logger](C:\Users\cpshc\Y3\SoftwareTesting\SoftwareTesting-HW05\SoftwareTesting-HW05-23127104\\.agents\skills\ai-audit-logger\SKILL.md) **Dùng skill jtl-data-analyzer. Phân tích raw JTL &#x20;**\
+cho scenario soak. Viết bug report nếu có bug  
+```
+- AI Output:
+```
+Đã chạy parser canonical trên `results/23127104_Soak_20260830.jtl`, tạo và xác minh `results/23127104_Soak_20260830_analysis.json`. Whole-run có 5.634 samples, 0 failures, error rate 0%, toàn bộ HTTP 200, throughput 7,8395 samples/s và p95 17 ms. Raw JTL được chia deterministic thành ba cửa sổ khoảng 239,5 giây và chạy lại cùng parser: cả ba có 0 failures, p95 17 ms; throughput lần lượt 7,6634, 7,9255 và 7,9414 samples/s. Cross-check JMeter HTML cho overall sample count, failure count và p95 đều delta 0; parser tests đạt 2/2. Không quan sát thấy bug nên không thêm bug report. Đã cập nhật Mục 11, 12, 13 trong `report/MAIN_REPORT.md`, summary trong `README.md` và tạo `results/soak-window-analysis/`. Không công bố endurance threshold vì chỉ có một resource screenshot khoảng phút thứ 4, thiếu resource evidence đầu/giữa/cuối.
+```
