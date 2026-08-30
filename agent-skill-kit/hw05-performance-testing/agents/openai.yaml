@@ -1,0 +1,4 @@
+interface:
+  display_name: "HW05 Performance Testing"
+  short_description: "Design, analyze, and audit HW05 performance tests"
+  default_prompt: "Use $hw05-performance-testing to design and audit my HW05 performance-testing workflow."
