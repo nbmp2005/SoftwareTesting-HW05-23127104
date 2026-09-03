@@ -69,15 +69,39 @@ def summarize(rows: list[dict[str, str]]) -> dict[str, object]:
     return output
 
 
+def filter_by_thread_prefix(
+    rows: list[dict[str, str]], prefixes: list[str]
+) -> list[dict[str, str]]:
+    """Return samples whose threadName starts with one of the given prefixes."""
+    if not prefixes:
+        return rows
+    if not rows or "threadName" not in rows[0]:
+        raise ValueError("JTL is missing threadName required by --thread-prefix")
+    selected = [
+        row for row in rows
+        if any(row["threadName"].startswith(prefix) for prefix in prefixes)
+    ]
+    if not selected:
+        rendered = ", ".join(repr(prefix) for prefix in prefixes)
+        raise ValueError(f"No JTL samples match thread prefix(es): {rendered}")
+    return selected
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", type=Path, help="CSV-format JMeter .jtl file")
     parser.add_argument("--output", type=Path, help="Optional JSON output path")
+    parser.add_argument(
+        "--thread-prefix",
+        action="append",
+        default=[],
+        help="Only analyze rows whose threadName starts with this value; repeatable",
+    )
     args = parser.parse_args()
 
     with args.input.open("r", encoding="utf-8-sig", newline="") as source:
         rows = list(csv.DictReader(source))
-    result = summarize(rows)
+    result = summarize(filter_by_thread_prefix(rows, args.thread_prefix))
     rendered = json.dumps(result, ensure_ascii=False, indent=2)
     if args.output:
         args.output.write_text(rendered + "\n", encoding="utf-8")

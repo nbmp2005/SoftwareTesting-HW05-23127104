@@ -24,7 +24,8 @@ hw05-performance-testing/
 │   ├── result-analysis.md
 │   └── report-submission.md
 └── scripts/
-    └── analyze_jtl.py
+    ├── analyze_jtl.py
+    └── test_analyze_jtl.py
 ```
 
 `SKILL.md` chứa quy tắc cốt lõi và router. Agent chỉ đọc reference phù hợp với mode, giúp giảm context nhưng vẫn giữ các invariant. Script phân tích JTL dùng standard library, không sửa raw input.
@@ -77,6 +78,12 @@ Chạy script:
 python agent-skill-kit/hw05-performance-testing/scripts/analyze_jtl.py results/load/<real-file>.jtl --output results/load/analysis.json
 ```
 
+Với Stress/Spike có nhiều Thread Group, dùng `--thread-prefix` (có thể lặp lại) để tạo metric theo stage/phase mà không sửa raw JTL:
+
+```powershell
+python -X utf8 agent-skill-kit/hw05-performance-testing/scripts/analyze_jtl.py results/23127104_Spike_20260830.jtl --thread-prefix "Spike burst:" --output results/spike-phase-analysis/spike_analysis.json
+```
+
 Đối chiếu ít nhất sample count, error count và p95 bằng JMeter report hoặc cách tính thứ hai. Script dùng linear interpolation; JMeter có thể làm tròn hoặc dùng phương pháp rank khác nên cần ghi phương pháp khi số lẻ khác nhau.
 
 ### Submission audit
@@ -116,6 +123,8 @@ Có thể bổ sung sau khi đã có artifact thật:
 Mỗi tự động hóa phải giữ raw JTL bất biến và in rõ input, phương pháp, timezone, window.
 
 ## 7. Demo skill trong video
+
+Kịch bản lời thoại và thao tác chi tiết nằm tại [05_KICH_BAN_VIDEO_DEMO.md](05_KICH_BAN_VIDEO_DEMO.md), phần Video 2.
 
 Để đáp ứng phần Agent Skill, demo end-to-end một endpoint group, ví dụ transactional:
 

@@ -8,11 +8,11 @@ Trong Spike run `23127104_Spike_20260830`, sampler `6 - POST create coupon` ghi 
 
 | Thuộc tính | Giá trị |
 | --- | --- |
-| ID | BUG-SPIKE-001 |
-| Loại | Functional/data-integrity under concurrent load; cần phân biệt SUT defect với test-data collision |
+| ID | [BUG-SPIKE-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/1) |
+| Loại | Performance test-script/test-data defect; SUT error-handling finding còn conditional |
 | Severity | High đối với kết quả run vì hơn một phần ba thao tác tạo coupon thất bại |
 | Priority | High cho triage trước khi dùng run để kết luận capacity |
-| Trạng thái | Open – root cause unconfirmed |
+| Trạng thái | Open – collision pattern confirmed; server-side exception/contract unconfirmed |
 | Scenario | Spike: pre-baseline 8 VU → burst 40 VU → recovery 8 VU |
 | Endpoint | `POST http://localhost:3000/api/admin/coupons` |
 
@@ -25,7 +25,7 @@ Trong Spike run `23127104_Spike_20260830`, sampler `6 - POST create coupon` ghi 
 
 ## Kết quả mong đợi
 
-Request tạo coupon với dữ liệu hợp lệ trả HTTP 200 theo Response Assertion trong JMX. Nếu payload trùng code, API cần xử lý theo contract đã xác nhận; chưa có API contract trong evidence hiện tại để khẳng định response code 4xx cụ thể.
+Response Assertion trong JMX kỳ vọng HTTP 200 cho coupon code mới. Với payload trùng code, response đúng phải theo API contract; evidence hiện tại chưa đủ để khẳng định phải là một mã 4xx cụ thể.
 
 ## Kết quả thực tế
 
@@ -34,25 +34,29 @@ Request tạo coupon với dữ liệu hợp lệ trả HTTP 200 theo Response A
 - JSON path `6 - POST create coupon.error_rate_percent`: 34,3324%.
 - JSON path `6 - POST create coupon.response_codes`: HTTP 200 = 241, HTTP 500 = 126.
 - JSON path `__overall__.failures`: 126; `__overall__.error_rate_percent`: 5,4031%.
-- Failed raw rows có `responseMessage = Internal Server Error` và assertion nhận 500 thay vì 200. Có failed row mang thread name của burst và recovery, nên lỗi không chỉ xuất hiện trong một sampler khác hoặc một response code giả.
+- Phase pre-spike: 393 samples, 0 failures; 63 coupon samples, 0 failures.
+- Phase burst: 1.545 samples, 63 failures; 63/241 coupon failures.
+- Phase recovery: 394 samples, 63 failures; 63/63 coupon failures.
+- Failed raw rows có `responseMessage = Internal Server Error` và assertion nhận 500 thay vì 200.
 
 ## Evidence
 
 - Raw JTL: `results/23127104_Spike_20260830.jtl` (439.607 byte; SHA-256 `0DCF49DEDEF899ED570B545543F483535023DAEC89A23FE3127A8A2C1B7B3A23`).
 - Parser JSON: `results/23127104_Spike_20260830_analysis.json`.
+- Phase JSON: `results/spike-phase-analysis/pre-spike_analysis.json`, `spike_analysis.json`, `recovery_analysis.json`.
 - JMeter HTML cross-check: `results/spike-report/statistics.json`.
 - Screenshot cuối run: `evidence/23127104_Spike_Evidence_20260830.png` hiển thị 2.332 samples và 126 errors.
-- JMX: `jmeter/23127104_Spike_20260830.jmx`; cả ba phase dùng coupon code `CPN${run_id}${__counter(FALSE,seq)}`.
+- Executed JMX: phiên bản ở commit `8897078` dùng `CPN${run_id}${__counter(FALSE,seq)}` trong cả ba phase. File `jmeter/23127104_Spike_20260830.jmx` hiện tại đã đổi sang `CPN${run_id}_${__UUID()}` nhưng chưa rerun.
 
 Cross-check JMeter HTML khớp parser ở overall sample count (delta 0), failure count (delta 0) và p95 elapsed 16 ms (delta 0). Coupon p95 là 17,0 ms theo nội suy tuyến tính của parser và khoảng 17,6 ms theo JMeter; chênh lệch 0,6 ms là khác phương pháp percentile/làm tròn, không liên quan đến 126 failures.
 
 ## Phân tích nguyên nhân và giới hạn
 
-Raw JTL chứng minh HTTP 500 nhưng không lưu response body hoặc server stack trace, nên không chứng minh database, CPU hay overload là root cause. Việc ba Thread Group dùng lại cùng mẫu coupon code làm collision dữ liệu giữa các phase trở thành giả thuyết cần kiểm tra. JMX cũng ghi chú 500 có thể là `coupon_code collision`, nhưng ghi chú test plan không thay thế server log.
+Raw JTL chứng minh HTTP 500 nhưng không lưu response body hoặc server stack trace, nên không chứng minh database, CPU hay overload là root cause. Burst thất bại đúng 63 coupon — bằng số coupon pre-spike — và recovery thất bại toàn bộ 63 coupon khi ba Thread Group của executed JMX dùng lại `CPN${run_id}${__counter(FALSE,seq)}`. Pattern xác nhận test-data/counter collision với độ tin cậy cao. Server-side exception và cách API phải xử lý duplicate vẫn cần contract/server log để xác nhận.
 
 ## Đề xuất xác minh/fix
 
-1. Rerun với coupon code duy nhất xuyên suốt mọi Thread Group, ví dụ kết hợp `run_id`, phase và UUID; dọn dữ liệu test trước run.
+1. Dùng JMX hiện tại đã đổi coupon code sang UUID, dọn dữ liệu test và rerun với `run_id` mới.
 2. Bật lưu response body cho failed samples trong một run chẩn đoán nhỏ và thu server log/DB constraint error cùng timestamp.
 3. Nếu 500 biến mất, phân loại finding là test-script/data defect và sửa generator.
 4. Nếu 500 vẫn xuất hiện với payload duy nhất, mở SUT defect cho concurrent coupon creation kèm server trace.
@@ -70,17 +74,17 @@ Raw JTL chứng minh HTTP 500 nhưng không lưu response body hoặc server sta
 
 ## Tóm tắt
 
-Trong Stress run `23127104_Stress_20260830`, sampler `6 - POST create coupon` có 1.680/2.519 failures (66,6931%), đều là HTTP 500. Toàn run có 1.680/15.445 failures (10,8773%). Phân tích từng stage cho thấy failure bắt đầu từ Stage 2 và số failure coupon ở mỗi stage sau bằng đúng số coupon samples của stage ngay trước: 167, 338, 504 và 671. Cùng với việc mỗi Thread Group dùng lại `CPN${run_id}${__counter(FALSE,seq)}`, pattern này xác nhận lỗi thiết kế test-data/counter giữa các stage với độ tin cậy cao; nó không chứng minh SUT saturation.
+Trong Stress run `23127104_Stress_20260830`, sampler `6 - POST create coupon` có 1.680/2.519 failures (66,6931%), đều là HTTP 500. Toàn run có 1.680/15.445 failures (10,8773%). Phân tích từng stage cho thấy failure bắt đầu từ Stage 2 và số failure coupon ở mỗi stage sau bằng đúng số coupon samples của stage ngay trước: 167, 338, 504 và 671. Executed JMX ở commit `8897078` dùng lại `CPN${run_id}${__counter(FALSE,seq)}` trong mỗi Thread Group; pattern này xác nhận lỗi thiết kế test-data/counter giữa các stage với độ tin cậy cao và không chứng minh SUT saturation.
 
 ## Phân loại
 
 | Thuộc tính | Giá trị |
 | --- | --- |
-| ID | BUG-STRESS-001 |
+| ID | [BUG-STRESS-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/2) |
 | Loại | Performance test-script / test-data defect; có conditional SUT error-handling finding |
 | Severity | Critical đối với tính hợp lệ của Stress threshold; High đối với tỷ lệ request coupon thất bại |
 | Priority | P1 – phải sửa và rerun trước khi kết luận capacity |
-| Trạng thái | Open – test-data defect confirmed by quantitative pattern; SUT root cause/error contract unconfirmed |
+| Trạng thái | Fix implemented bằng UUID trong JMX hiện tại; rerun verification pending; SUT error contract unconfirmed |
 | Scenario | Stress 10 → 20 → 30 → 40 → 50 VU, mỗi stage 140 giây theo JMX |
 | Endpoint | `POST http://localhost:3000/api/admin/coupons` |
 
@@ -113,7 +117,7 @@ Số failure ở Stage 2–5 lần lượt bằng coupon sample count của Stag
 - Whole-run JSON: `results/23127104_Stress_20260830_analysis.json`.
 - Stage inputs/JSON: `results/stress-stage-analysis/`.
 - JMeter HTML: `results/stress-report/statistics.json`.
-- JMX: `jmeter/23127104_Stress_20260830.jmx`; cả năm sampler coupon dùng `CPN${run_id}${__counter(FALSE,seq)}`.
+- Executed JMX: phiên bản ở commit `8897078` dùng counter cục bộ; `jmeter/23127104_Stress_20260830.jmx` hiện tại đã đổi sang `CPN${run_id}_${__UUID()}` nhưng chưa rerun.
 - Raw failed rows có label `6 - POST create coupon`, response `500 Internal Server Error` và assertion nhận 500 thay vì 200.
 
 JMeter HTML khớp whole-run parser ở sample count 15.445, failure count 1.680 và p95 elapsed 14 ms; absolute delta của cả ba bằng 0. Tổng samples/failures của năm stage JSON cũng lần lượt bằng whole-run JSON: 15.445 và 1.680.
@@ -126,7 +130,7 @@ JMeter HTML khớp whole-run parser ở sample count 15.445, failure count 1.680
 
 ## Đề xuất fix và xác minh
 
-1. Sinh coupon code duy nhất toàn run, ví dụ `CPN${run_id}_${phase}_${__UUID()}`, hoặc dùng một Counter Config dùng chung đã xác minh scope.
+1. Dùng JMX hiện tại đã sinh coupon code UUID duy nhất, dọn/seed database và đặt `run_id` mới.
 2. Dọn/seed database có kiểm soát và dùng `run_id` mới cho mỗi attempt.
 3. Lưu response body của failed samples trong diagnostic run nhỏ và thu server log cùng timestamp.
 4. Rerun toàn bộ Stress scenario; chỉ dùng run mới để xác định first sustained capacity breach.

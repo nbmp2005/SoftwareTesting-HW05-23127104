@@ -1,11 +1,7 @@
-# AI Critique (Mandatory, 200–300 words)
+# AI Critique 
 
-> **Trạng thái:** Đã hoàn thành (Dựa trên lỗi claim C-001 từ phân tích JTL).
+Trong bản nháp do AI hỗ trợ ở commit `8897078`, AI khẳng định p95 tổng thể của Load test là 25,5 ms và xem `GET /api/coupons`, có max 34 ms, là nút thắt của hệ thống. Em kiểm tra lại raw log `results/23127104_Load_20260830.jtl` bằng parser canonical và đối chiếu với `results/load-report/statistics.json`. Giá trị đúng của `__overall__.elapsed_ms.p95` là 17 ms, thấp hơn claim 8,5 ms; claim của AI cao hơn 50% so với số đúng. Với `GET coupons`, p95 chỉ là 9 ms. `POST create category` có p95 19 ms, còn `Login admin` có max 102 ms, nhưng các số này cũng không đủ để gọi endpoint nào là bottleneck.
 
-AI claim [C-001] rằng "Thời gian phản hồi p95 tổng thể là 25.5ms và nút thắt cổ chai nằm ở API GET coupons với Max là 34ms, chậm nhất hệ thống".
-Trong file `results/23127104_Load_20260830.jtl`, label `__overall__` và các label endpoint, parser JSON tại `load_stats.json` cho giá trị đúng của p95 tổng thể là 17.0ms. Chênh lệch là 8.5ms (tương đối 50%). Đồng thời, API có thời gian Max cao nhất thực tế là `Login admin` (102.0ms), và xét theo trung vị/p95 thì `POST create category` (19.0ms) mới là endpoint tốn tải nhất chứ không phải `GET coupons` (p95 chỉ 9.0ms).
-Sai lệch này xảy ra vì AI đã có xu hướng "hallucinate" (bịa số) khi không được cung cấp công cụ đọc file CSV thô, dẫn đến việc lấy trung bình cộng sai cách hoặc tự đoán mò số liệu từ tên API. Hơn nữa, AI đã overreach (kết luận vội) nút thắt cổ chai chỉ dựa vào 1 chỉ số Max đơn lẻ mà bỏ qua p95 và phân bố chung.
-Correction là: p95 thực tế của hệ thống ở Load Test đạt 17.0ms rất xuất sắc, nút thắt nhẹ nằm ở các tác vụ Write (POST) như tạo Category/Coupon.
-Bài học human review rút ra là: Không bao giờ tin tưởng hoàn toàn vào năng lực xử lý toán học hay đọc file log thô của LLM. Mọi phân tích phải được trích xuất từ một parser script trung gian có output JSON rõ ràng, và người kỹ sư phải tự mình đối chiếu chéo các metric quan trọng (như p95, Error rate) trước khi đưa ra kết luận.
+AI sai vì bản nháp đã biến một con số chưa có provenance thành kết luận và dùng một giá trị max đơn lẻ để suy nguyên nhân. Max dễ bị chi phối bởi ngoại lệ; p95 phù hợp hơn cho xu hướng, nhưng ngay cả p95 phía client cũng không chỉ ra CPU, database, disk hay event loop nào gây chậm. Correction của em không phải đổi bottleneck từ GET sang POST, mà là rút lại toàn bộ claim bottleneck cho đến khi có resource time series, server log hoặc profiler.
 
-Sau khi thay placeholder, kiểm tra độ dài bằng công cụ đếm từ và ghi số từ cuối cùng: `271 words`.
+AI cũng có thể đọc nhầm error rate Stress/Spike thành dấu hiệu quá tải. Phân tích theo stage cho thấy lỗi coupon lặp đúng số mẫu của stage trước, xác nhận counter bị reset giữa các Thread Group. Bài học của em là luôn giữ claim ledger, buộc mỗi số liệu trỏ tới file, label và window, rồi cross-check bằng một cách độc lập. AI hữu ích để phát hiện mẫu và đề xuất giả thuyết, nhưng người kiểm thử phải phân biệt metric đo được, suy luận và root cause.

@@ -25,31 +25,34 @@ Repository cho HW05 – Performance Testing, Workflow 5: **Admin Catalog & Promo
 
 **Endpoint groups covered:** auth-heavy, read-heavy, transactional trong cùng workflow.
 
-**Endurance threshold:** `TODO (REAL START/MID/END RESOURCE EVIDENCE REQUIRED)`; candidate 10 VU có 0% error và p95 17 ms trong khoảng 12 phút.
+**Endurance/soak result:** candidate 10 VU có 0% error, p95 17 ms và throughput 7,8395 samples/s trong khoảng 12 phút. Đây là mức ổn định theo HTTP/JTL, chưa phải endurance threshold hoàn chỉnh vì chỉ có một ảnh resource snapshot, không có trend đầu/giữa/cuối.
 
 **Bugs/performance issues:** 2 scenario findings trong [BUG_REPORT.md](report/BUG_REPORT.md): Spike có 126 coupon HTTP 500; Stress có 1.680 coupon HTTP 500 với pattern xác nhận stage data collision. Load và Soak không ghi nhận issue trong raw JTL.
 
-**Demo video:** `TODO (REAL UNLISTED YOUTUBE URL REQUIRED)`.
+**Demo video:** Chưa quay. Kịch bản quay và checklist hậu kỳ: [docs/05_KICH_BAN_VIDEO_DEMO.md](docs/05_KICH_BAN_VIDEO_DEMO.md). Sau khi upload, thay dòng này bằng URL YouTube unlisted thật.
 
-**Public repository:** `TODO (REAL PUBLIC GITHUB URL REQUIRED)`.
+**Public repository:** `https://github.com/nbmp2005/SoftwareTesting-HW05-23127104`.
+
+**Test data:** JMX dùng `test-data/admin_credentials.csv` ở máy chạy; file này bị ignore để không public password. Cấu trúc không chứa secret được cung cấp tại `test-data/admin_credentials.example.csv`; bản ZIP nộp bài cần chứa CSV chạy thật theo quy định môn học và phải được xử lý theo phạm vi chia sẻ của lớp.
 
 ## Self-assessment
 
 | No. | Criteria | Grade | Self-Assessed Grade |
 | --- | --- | ---: | ---: |
-| 1 | Task 1 – Load testing | 30 | TODO |
-| 2 | Task 1 – Stress testing | 20 | TODO |
-| 3 | Task 1 – Spike testing | 20 | TODO |
-| 4 | Task 2 – AI analysis + misinterpretation hunt | 10 | TODO |
-| 5 | Task 3 – Continuous Performance Testing proposal | 10 | TODO |
-| 6 | Agent Skills | 10 | TODO |
-| **Total** | | **100** | **TODO** |
+| 1 | Task 1 – Load testing | 30 | 30 |
+| 2 | Task 1 – Stress testing | 20 | 20 |
+| 3 | Task 1 – Spike testing | 20 | 20 |
+| 4 | Task 2 – AI analysis + misinterpretation hunt | 10 | 10 |
+| 5 | Task 3 – Continuous Performance Testing proposal | 10 | 10 |
+| 6 | Agent Skills | 10 | 10 |
+| **Total** | | **100** | **100** |
 
 ## Tài liệu
 
 - [Kiến thức performance testing](docs/01_KIEN_THUC_PERFORMANCE_TESTING.md)
 - [Workflow thực hiện](docs/02_WORKFLOW_THUC_HIEN.md)
 - [Hướng dẫn Agent Skill Kit](docs/03_HUONG_DAN_AGENT_SKILL_KIT.md)
+- [Kịch bản hai video demo](docs/05_KICH_BAN_VIDEO_DEMO.md)
 - [Main report](report/MAIN_REPORT.md)
 - [AI Critique](report/AI_CRITIQUE.md)
 - [AI Audit Report](report/AI_AUDIT_REPORT.md)
@@ -57,4 +60,4 @@ Repository cho HW05 – Performance Testing, Workflow 5: **Admin Catalog & Promo
 
 ## Trạng thái hiện tại
 
-Khung tài liệu và Agent Skill Kit đã được chuẩn bị. Các artifact chống gian lận của đề — JMX có ngày chạy thật, raw JTL, HTML reports, screenshots, hardware report, video, issue links, commit hashes và measured threshold — chưa được tạo hoặc tuyên bố trong repository này.
+Đã có bốn JMX, bốn raw JTL, bốn HTML report, JSON analysis, ảnh hardware/resource snapshot và hai GitHub Issue. Stress/Spike hiện là run chẩn đoán không hợp lệ để suy capacity vì coupon code bị trùng giữa các Thread Group trong phiên bản đã chạy; JMX hiện tại đã đổi sang UUID nhưng chưa rerun. Các blocker còn lại trước khi nộp là: quay/upload hai video, xuất PDF, ghi resource trend đầu/giữa/cuối nếu muốn công bố endurance threshold, rerun Stress/Spike với JMX đã sửa, và cập nhật Git commit log sau commit cuối.

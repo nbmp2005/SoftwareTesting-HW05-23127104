@@ -29,6 +29,22 @@ class AnalyzeJtlTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Missing required JTL columns"):
             MODULE.summarize([{"elapsed": "100"}])
 
+    def test_filter_by_thread_prefix_selects_one_phase(self):
+        rows = [
+            {"threadName": "Spike pre-baseline 1-1", "elapsed": "10"},
+            {"threadName": "Spike burst 2-1", "elapsed": "20"},
+            {"threadName": "Spike recovery 3-1", "elapsed": "30"},
+        ]
+
+        selected = MODULE.filter_by_thread_prefix(rows, ["Spike burst"])
+
+        self.assertEqual(selected, [rows[1]])
+
+    def test_filter_by_thread_prefix_rejects_no_matches(self):
+        rows = [{"threadName": "Load 1-1"}]
+        with self.assertRaisesRegex(ValueError, "No JTL samples match"):
+            MODULE.filter_by_thread_prefix(rows, ["Spike"])
+
 
 if __name__ == "__main__":
     unittest.main()

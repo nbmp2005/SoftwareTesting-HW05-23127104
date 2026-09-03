@@ -1,6 +1,6 @@
 ---
 name: ai-audit-logger
-description: Trích xuất và định dạng lại lịch sử tương tác AI (tool, thời gian, prompt, output) thành các entry cho AI Audit Report theo đúng format đề bài HW04. Dùng cuối mỗi phiên làm việc với AI.
+description: Trích xuất và định dạng lịch sử tương tác AI (tool, thời gian, prompt, output) thành entry cho AI Audit Report HW05. Chỉ dùng khi người dùng gọi rõ $ai-audit-logger; không tự động ghi các phiên khác.
 ---
 
 # AI Audit Logger
@@ -24,4 +24,4 @@ Khi được người dùng gọi, Agent phải thực hiện các bước sau:
 1. **Thu thập**: Tổng hợp lại các prompt/output quan trọng trong phiên làm việc hiện tại (từ transcript hoặc context hiện tại).
 2. **Ghi log**: Định dạng các mục này theo Format bắt buộc ở trên và **chèn nối tiếp** (append) vào file `report/AI_AUDIT_REPORT.md`.
 3. **Cảnh báo**: Sau khi ghi xong, LUÔN nhắc nhở người dùng: "KHÔNG được để AI tự bịa timestamp — phải đảm bảo thời gian ghi nhận là thời gian thật của phiên làm việc."
-4. **Lưu ý**: Chỉ dùng skill /ai-audit-logger khi được người dùng gọi trong câu lệnh, không tự ý thêm các câu chat không được gọi skill này vào.
+4. **Lưu ý**: Chỉ dùng skill `$ai-audit-logger` khi được người dùng gọi trong câu lệnh, không tự ý thêm các câu chat không được gọi skill này vào.

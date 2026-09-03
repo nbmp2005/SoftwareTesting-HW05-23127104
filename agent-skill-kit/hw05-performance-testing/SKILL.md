@@ -11,7 +11,7 @@ Produce a reproducible, evidence-backed HW05 result. Treat the assignment text a
 
 - For scenario design or JMeter review, read [references/test-design.md](references/test-design.md).
 - For running tests, collecting evidence, recovering state, or naming artifacts, read [references/execution-evidence.md](references/execution-evidence.md).
-- For JTL analysis, threshold derivation, and AI-misinterpretation review, read [references/result-analysis.md](references/result-analysis.md). Use `scripts/analyze_jtl.py` when a real CSV-format JTL is available.
+- For JTL analysis, threshold derivation, and AI-misinterpretation review, read [references/result-analysis.md](references/result-analysis.md). Use `scripts/analyze_jtl.py` when a real CSV-format JTL is available; use repeatable `--thread-prefix` filters when JMeter `threadName` reliably identifies a stage or phase.
 - For report writing or final submission audit, read [references/report-submission.md](references/report-submission.md).
 - Whenever generating or updating Markdown deliverables, also read [references/report-artifacts.md](references/report-artifacts.md). It defines the canonical files, source requirements, and safe incremental update protocol.
 

@@ -1,1 +1,2 @@
 test-data/*.csv
+!test-data/admin_credentials.example.csv
