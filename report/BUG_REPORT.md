@@ -12,7 +12,7 @@ Trong Spike run `23127104_Spike_20260830`, sampler `6 - POST create coupon` ghi 
 | Loại | Performance test-script/test-data defect; SUT error-handling finding còn conditional |
 | Severity | High đối với kết quả run vì hơn một phần ba thao tác tạo coupon thất bại |
 | Priority | High cho triage trước khi dùng run để kết luận capacity |
-| Trạng thái | Open – collision pattern confirmed; server-side exception/contract unconfirmed |
+| Trạng thái | Test-script fix verified ngày 03/09/2026; GitHub Issue cần cập nhật/đóng thủ công; duplicate error contract vẫn ngoài phạm vi |
 | Scenario | Spike: pre-baseline 8 VU → burst 40 VU → recovery 8 VU |
 | Endpoint | `POST http://localhost:3000/api/admin/coupons` |
 
@@ -46,7 +46,7 @@ Response Assertion trong JMX kỳ vọng HTTP 200 cho coupon code mới. Với p
 - Phase JSON: `results/spike-phase-analysis/pre-spike_analysis.json`, `spike_analysis.json`, `recovery_analysis.json`.
 - JMeter HTML cross-check: `results/spike-report/statistics.json`.
 - Screenshot cuối run: `evidence/23127104_Spike_Evidence_20260830.png` hiển thị 2.332 samples và 126 errors.
-- Executed JMX: phiên bản ở commit `8897078` dùng `CPN${run_id}${__counter(FALSE,seq)}` trong cả ba phase. File `jmeter/23127104_Spike_20260830.jmx` hiện tại đã đổi sang `CPN${run_id}_${__UUID()}` nhưng chưa rerun.
+- Executed pre-fix JMX: phiên bản ở commit `8897078` dùng `CPN${run_id}${__counter(FALSE,seq)}` trong cả ba phase. JMX hiện tại dùng `CPN${run_id}_${__UUID()}` và đã được rerun ngày 03/09/2026.
 
 Cross-check JMeter HTML khớp parser ở overall sample count (delta 0), failure count (delta 0) và p95 elapsed 16 ms (delta 0). Coupon p95 là 17,0 ms theo nội suy tuyến tính của parser và khoảng 17,6 ms theo JMeter; chênh lệch 0,6 ms là khác phương pháp percentile/làm tròn, không liên quan đến 126 failures.
 
@@ -68,6 +68,18 @@ Raw JTL chứng minh HTTP 500 nhưng không lưu response body hoặc server sta
 - SUT xử lý concurrent create đúng contract, không trả unhandled HTTP 500; và
 - Spike run được chạy lại, raw JTL mới có provenance riêng trước khi kết luận capacity/recovery.
 
+## Xác minh sau fix – 03/09/2026
+
+Rerun `run_id=SPIKE_UUID_20260903_01` đáp ứng acceptance criteria của phần test-script:
+
+- Raw JTL: `results/rerun-uuid-20260903/spike/23127104_Spike_UUID_20260903.jtl` (423.651 byte; SHA-256 `FE98B24EC73AE84E37DD07C23CE7F375DD5745B4FFBB2A078950BB273B9A0D92`).
+- Whole-run: 2.330 samples, 0 failures, 0% error, p95 15 ms, 12,8438 samples/s; toàn bộ response HTTP 200.
+- Coupon: 366 samples, 0 failures, p95 19 ms.
+- Pre-spike/burst/recovery: lần lượt 393/1.537/400 samples, đều 0 failures; p95 15/13/20 ms.
+- HTML cross-check tại `results/rerun-uuid-20260903/spike/html-report/statistics.json` khớp sample count, failure count và p95 whole-run (delta 0).
+
+Kết luận: UUID loại bỏ collision; recovery đạt candidate criteria 0% lỗi và p95 <2.000 ms. Finding test-script được xác minh đã sửa. Kết quả HTTP 500 pre-fix vẫn có giá trị minh họa duplicate handling, nhưng không còn được dùng để đánh giá Spike performance.
+
 ---
 
 # BUG-STRESS-001 – Coupon code bị tái sử dụng giữa các Stress stage, tạo HTTP 500 giả capacity failure
@@ -84,7 +96,7 @@ Trong Stress run `23127104_Stress_20260830`, sampler `6 - POST create coupon` c�
 | Loại | Performance test-script / test-data defect; có conditional SUT error-handling finding |
 | Severity | Critical đối với tính hợp lệ của Stress threshold; High đối với tỷ lệ request coupon thất bại |
 | Priority | P1 – phải sửa và rerun trước khi kết luận capacity |
-| Trạng thái | Fix implemented bằng UUID trong JMX hiện tại; rerun verification pending; SUT error contract unconfirmed |
+| Trạng thái | Test-script fix verified ngày 03/09/2026; GitHub Issue cần cập nhật/đóng thủ công; SUT duplicate error contract vẫn ngoài phạm vi |
 | Scenario | Stress 10 → 20 → 30 → 40 → 50 VU, mỗi stage 140 giây theo JMX |
 | Endpoint | `POST http://localhost:3000/api/admin/coupons` |
 
@@ -117,7 +129,7 @@ Số failure ở Stage 2–5 lần lượt bằng coupon sample count của Stag
 - Whole-run JSON: `results/23127104_Stress_20260830_analysis.json`.
 - Stage inputs/JSON: `results/stress-stage-analysis/`.
 - JMeter HTML: `results/stress-report/statistics.json`.
-- Executed JMX: phiên bản ở commit `8897078` dùng counter cục bộ; `jmeter/23127104_Stress_20260830.jmx` hiện tại đã đổi sang `CPN${run_id}_${__UUID()}` nhưng chưa rerun.
+- Executed pre-fix JMX: phiên bản ở commit `8897078` dùng counter cục bộ; JMX hiện tại dùng `CPN${run_id}_${__UUID()}` và đã được rerun ngày 03/09/2026.
 - Raw failed rows có label `6 - POST create coupon`, response `500 Internal Server Error` và assertion nhận 500 thay vì 200.
 
 JMeter HTML khớp whole-run parser ở sample count 15.445, failure count 1.680 và p95 elapsed 14 ms; absolute delta của cả ba bằng 0. Tổng samples/failures của năm stage JSON cũng lần lượt bằng whole-run JSON: 15.445 và 1.680.
@@ -142,3 +154,15 @@ JMeter HTML khớp whole-run parser ở sample count 15.445, failure count 1.680
 - Không còn HTTP 500 do coupon collision.
 - Stage metrics của rerun có error rate phản ánh SUT behavior thay vì test-data defect.
 - Stress threshold chỉ được công bố từ rerun mới cùng resource evidence theo stage.
+
+## Xác minh sau fix – 03/09/2026
+
+Rerun `run_id=STRESS_UUID_20260903_01` xác nhận UUID loại bỏ defect:
+
+- Raw JTL: `results/rerun-uuid-20260903/stress/23127104_Stress_UUID_20260903.jtl` (2.851.178 byte; SHA-256 `AA5EFC02BBD57F379D8DB1E0E145646D9079323B134EB2DD059DBA33631DAB97`).
+- Whole-run: 15.397 samples, 0 failures, 0% error, p95 24 ms, 22,0486 samples/s; toàn bộ response HTTP 200.
+- Coupon: 2.503 samples, 0 failures, p95 19 ms.
+- Stage 1→5 đều 0 failures; throughput 7,4394→14,9190→22,2335→29,5590→36,8904 samples/s; p95 17→15→19→21→31 ms.
+- HTML cross-check tại `results/rerun-uuid-20260903/stress/html-report/statistics.json` khớp sample count, failure count và p95 whole-run (delta 0).
+
+Kết luận: finding test-script được xác minh đã sửa. Không quan sát error-based breakpoint đến 50 VU; đây là lower bound trong phạm vi test, không phải capacity tối đa vì không có stage trên 50 VU hoặc resource trend mới.

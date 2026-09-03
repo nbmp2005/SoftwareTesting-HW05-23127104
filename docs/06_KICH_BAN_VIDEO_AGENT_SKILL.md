@@ -1,6 +1,8 @@
 # Kịch bản Video 2 — Demo Agent Skill Kit (end-to-end)
 **Nguyễn Bình Minh Phương – 23127104**
 
+> **Video đã xuất bản:** [https://youtu.be/j8wR1m32oiw](https://youtu.be/j8wR1m32oiw) — metadata YouTube xác nhận thời lượng khoảng 9:09 ngày 03/09/2026.
+
 ---
 
 ## CHUẨN BỊ TRƯỚC KHI BẬT RECORD
@@ -313,5 +315,5 @@ Cảm ơn thầy cô. Em là Nguyễn Bình Minh Phương, MSSV 23127104."
 - [ ] Camera thấy AI thực sự phản hồi — không dùng ảnh tĩnh
 - [ ] Phần jtl-data-analyzer: thấy lệnh python chạy trong terminal
 - [ ] Phần submission-auditor: thấy ít nhất 1 finding thật
-- [ ] Upload YouTube **Unlisted** (có thể cùng video với Video 1 nếu tổng dài hơn 6 phút)
-- [ ] Cập nhật link vào `README.md` và `MAIN_REPORT.md` Mục 16
+- [ ] Mở link bằng cửa sổ ẩn danh để xác nhận privacy **Unlisted** và audio/nội dung end-to-end
+- [x] Cập nhật link vào `README.md` và `MAIN_REPORT.md` Mục 16

@@ -140,6 +140,13 @@ Video tối thiểu 6 phút, narration tiếng Việt, nên có:
 - AI misinterpretation + correction;
 - demo skill trên một endpoint group.
 
+Video đã nộp kèm repository này:
+
+- [Demo performance testing – 6:31](https://youtu.be/6lmRExvkqj4).
+- [Demo Agent Skill – khoảng 9:09](https://youtu.be/j8wR1m32oiw).
+
+Metadata URL/thời lượng đã được xác minh ngày 03/09/2026; privacy Unlisted, audio và nội dung phải được người nộp kiểm tra lại bằng cửa sổ ẩn danh.
+
 ## 11. Phase I – Continuous testing và đóng gói
 
 Viết flowchart quyết định từ commit/PR, filter thay đổi, smoke, performance baseline, so p95 và flag regression. Trình bày cost/false alarms và human triage.

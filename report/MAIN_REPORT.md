@@ -14,7 +14,8 @@
 | AI tool(s) | OpenAI Codex; Google Antigravity Agent/Gemini (theo lịch sử phiên đã ghi) |
 | Ngày thực hiện | 30/08/2026 |
 | Public repository | https://github.com/nbmp2005/SoftwareTesting-HW05-23127104 |
-| Demo video | Chưa quay; xem [kịch bản hai video](../docs/05_KICH_BAN_VIDEO_DEMO.md) |
+| Video demo performance | [YouTube – Video demo HW05](https://youtu.be/6lmRExvkqj4) (6:31) |
+| Video demo Agent Skill | [YouTube – Video demo Agent Skill HW05](https://youtu.be/j8wR1m32oiw) (9:09) |
 
 ## 1. Tuyên bố sử dụng AI
 
@@ -179,37 +180,33 @@ Kết luận Load: trong cửa sổ quan sát toàn run khoảng 327,719 giây v
 
 Baseline AI gợi ý các bậc 10→20→40→60 VU, mỗi bậc 2 phút. Phải sửa theo smoke/load baseline và năng lực máy.
 
-Lưu ý provenance: raw JTL/HTML ngày 30/08 được tạo bằng JMX ở commit `8897078`, khi coupon còn dùng counter cục bộ. JMX hiện tại đã sửa thành `CPN${run_id}_${__UUID()}` để chuẩn bị rerun; không được ghép kết quả lịch sử với cấu hình sau fix.
+Lưu ý provenance: run pre-fix ngày 30/08 thuộc JMX dùng counter cục bộ và chỉ được giữ làm evidence chẩn đoán. Kết quả canonical bên dưới là rerun UUID ngày 03/09, dùng JMX hiện tại với `CPN${run_id}_${__UUID()}` và `run_id=STRESS_UUID_20260903_01`.
 
 ### 8.2 Kết quả theo stage
 
 | Stage | Time window | VUs | Throughput | p95 | Error rate | CPU | RAM | Verdict |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | JMX delay 0s, duration 140s | 10 | 7,4455 samples/s | 16 ms | 0% | Không có metric theo stage | Không có metric theo stage | Stable theo HTTP/JTL tại stage này |
-| 2 | JMX delay 140s, duration 140s | 20 | 14,8748 samples/s | 13 ms | 8,0911% | Không có metric theo stage | Không có metric theo stage | Invalid: coupon collision bắt đầu |
-| 3 | JMX delay 280s, duration 140s | 30 | 22,2763 samples/s | 10 ms | 10,9314% | Không có metric theo stage | Không có metric theo stage | Invalid: coupon collision |
-| 4 | JMX delay 420s, duration 140s | 40 | 29,7158 samples/s | 10 ms | 12,2271% | Không có metric theo stage | Không có metric theo stage | Invalid: coupon collision |
-| 5 | JMX delay 560s, duration 140s | 50 | 37,0694 samples/s | 16 ms | 13,0596% | Không có metric theo stage | Không có metric theo stage | Invalid: coupon collision |
+| 1 | JMX delay 0s, duration 140s | 10 | 7,4394 samples/s | 17 ms | 0% | Không thu metric mới | Không thu metric mới | Stable theo HTTP/JTL |
+| 2 | JMX delay 140s, duration 140s | 20 | 14,9190 samples/s | 15 ms | 0% | Không thu metric mới | Không thu metric mới | Stable theo HTTP/JTL |
+| 3 | JMX delay 280s, duration 140s | 30 | 22,2335 samples/s | 19 ms | 0% | Không thu metric mới | Không thu metric mới | Stable theo HTTP/JTL |
+| 4 | JMX delay 420s, duration 140s | 40 | 29,5590 samples/s | 21 ms | 0% | Không thu metric mới | Không thu metric mới | Stable theo HTTP/JTL |
+| 5 | JMX delay 560s, duration 140s | 50 | 36,8904 samples/s | 31 ms | 0% | Không thu metric mới | Không thu metric mới | Mức cao nhất đã test; latency tăng nhưng không có lỗi HTTP |
 
-Nguồn whole-run: raw JTL `results/23127104_Stress_20260830.jtl` (3.058.854 byte; SHA-256 `DF6EC49CCCEB4DBBF3AE6F9E0B6981B9EE27B2C3C5FE0AF7A4DF46567E4898DA`) và `results/23127104_Stress_20260830_analysis.json`. Stage JSON tại `results/stress-stage-analysis/stage-1_analysis.json` đến `stage-5_analysis.json`, tạo bằng cách tách deterministic theo prefix `threadName` rồi chạy lại parser canonical.
+Nguồn canonical: raw JTL `results/rerun-uuid-20260903/stress/23127104_Stress_UUID_20260903.jtl` (2.851.178 byte; SHA-256 `AA5EFC02BBD57F379D8DB1E0E145646D9079323B134EB2DD059DBA33631DAB97`), parser JSON `results/rerun-uuid-20260903/stress/analysis.json`, HTML report `results/rerun-uuid-20260903/stress/html-report/` và năm JSON tại `stage-analysis/`. Stage được lọc deterministic theo prefix `threadName` rồi chạy parser canonical.
 
 | Label / whole-run JSON path | Samples | Failures | Error rate | Throughput (samples/s) | Mean (ms) | Median (ms) | p90 (ms) | p95 (ms) | p99 (ms) | Max (ms) | Response codes |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| `1 - Login admin` | 2.642 | 0 | 0% | 3,7838 | 3,136 | 2,0 | 5,0 | 8,0 | 15,0 | 80,0 | 200: 2.642 |
-| `2 - GET admin users` | 2.608 | 0 | 0% | 3,7426 | 2,807 | 2,0 | 4,0 | 7,65 | 15,0 | 43,0 | 200: 2.608 |
-| `3 - GET coupons` | 2.579 | 0 | 0% | 3,7083 | 7,177 | 6,0 | 13,0 | 16,0 | 29,0 | 47,0 | 200: 2.579 |
-| `4 - POST create category` | 2.559 | 0 | 0% | 3,6851 | 8,138 | 7,0 | 12,0 | 15,0 | 19,42 | 45,0 | 200: 2.559 |
-| `5 - POST create product` | 2.538 | 0 | 0% | 3,6618 | 8,095 | 7,0 | 13,0 | 16,0 | 22,0 | 45,0 | 200: 2.538 |
-| `6 - POST create coupon` | 2.519 | 1.680 | 66,6931% | 3,6394 | 4,787 | 3,0 | 10,0 | 12,0 | 17,0 | 45,0 | 200: 839; 500: 1.680 |
-| `__overall__` | 15.445 | 1.680 | 10,8773% | 22,1151 | 5,668 | 5,0 | 10,0 | 14,0 | 21,0 | 80,0 | 200: 13.765; 500: 1.680 |
+| `1 - Login admin` | 2.631 | 0 | 0% | 3,7678 | 3,994 | 2,0 | 8,0 | 12,0 | 24,0 | 506,0 | 200: 2.631 |
+| `2 - GET admin users` | 2.603 | 0 | 0% | 3,7380 | 3,420 | 2,0 | 7,0 | 11,0 | 23,0 | 58,0 | 200: 2.603 |
+| `3 - GET coupons` | 2.579 | 0 | 0% | 3,7113 | 15,419 | 12,0 | 32,0 | 37,0 | 51,0 | 102,0 | 200: 2.579 |
+| `4 - POST create category` | 2.552 | 0 | 0% | 3,6792 | 9,576 | 8,0 | 16,0 | 19,0 | 32,0 | 66,0 | 200: 2.552 |
+| `5 - POST create product` | 2.529 | 0 | 0% | 3,6535 | 9,301 | 8,0 | 15,0 | 19,0 | 32,0 | 67,0 | 200: 2.529 |
+| `6 - POST create coupon` | 2.503 | 0 | 0% | 3,6229 | 10,056 | 9,0 | 16,0 | 19,0 | 32,98 | 121,0 | 200: 2.503 |
+| `__overall__` | 15.397 | 0 | 0% | 22,0486 | 8,593 | 7,0 | 17,0 | 24,0 | 39,0 | 506,0 | 200: 15.397 |
 
-Cross-check `results/stress-report/statistics.json`: overall sample count 15.445, failure count 1.680 và p95 14 ms đều có absolute delta 0. Tổng năm stage JSON cũng khớp whole-run ở samples và failures.
+Cross-check với `results/rerun-uuid-20260903/stress/html-report/statistics.json` khớp sample count 15.397, failure count 0 và p95 24 ms (delta 0). Tổng năm stage cũng khớp whole-run. Rerun xác nhận fix UUID: 2.503/2.503 coupon request trả HTTP 200, không còn collision hay HTTP 500.
 
-First sustained breach: Stage 2 ở 20 VU có error rate 8,0911%, nhưng breach này do coupon data collision, không phải capacity breach đã xác nhận.
-
-Highest stable stage trong run hiện tại theo HTTP/JTL là Stage 1 (10 VU, 0% error, p95 16 ms). Không công bố đây là Stress capacity threshold vì Stage 2–5 bị test-data defect và thiếu resource trend theo stage.
-
-Failure mode: toàn bộ 1.680 failures là HTTP 500 ở `POST create coupon`. Số coupon failures Stage 2–5 lần lượt 167, 338, 504, 671, đúng bằng coupon samples của stage ngay trước; biểu thức code trong phiên bản đã chạy bị dùng lại ở mỗi Thread Group, đây là bằng chứng định lượng mạnh cho counter/data collision. Stress plan không có recovery stage riêng. Generator hiện tại đã đổi sang UUID nhưng chưa rerun. Xem [BUG-STRESS-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/2).
+Không quan sát error-based breakpoint đến mức cao nhất 50 VU. Mức cao nhất đã xác minh theo HTTP/JTL là 50 VU, throughput 36,8904 samples/s, p95 31 ms và 0% lỗi. Đây là **capacity lower bound trong phạm vi đã test**, không phải capacity tối đa tuyệt đối do chưa tăng tải vượt 50 VU và không có resource metric mới theo stage. Pre-fix run ngày 30/08 (15.445 samples, 1.680 lỗi) vẫn được giữ để chứng minh defect và human correction; không dùng làm kết quả performance cuối.
 
 ## 9. Task 1 – Spike test
 
@@ -222,37 +219,37 @@ Failure mode: toàn bộ 1.680 failures là HTTP 500 ở `POST create coupon`. S
 | Spike VUs/rise time/hold | 40 VU, rise 8 giây, hold khoảng 45 giây (delay 65 giây; scheduler 53 giây) |
 | Recovery VUs/duration | 8 VU, ramp 5 giây, hold khoảng 60 giây (delay 118 giây; scheduler 65 giây) |
 | Listener/report type | View Results Tree cho debug; raw JTL + HTML report từ non-GUI run. Executed JMX để listener enabled; JMX hiện tại đã disable để giảm overhead khi rerun. |
-| Recovery criteria | Candidate trong audit: sau burst tối đa 1 phút, error rate 0% và p95 <2.000 ms; run hiện tại không đạt vì coupon collision |
+| Recovery criteria | Candidate trong audit: sau burst tối đa 1 phút, error rate 0% và p95 <2.000 ms |
 
 Baseline AI gợi ý 10 VU → 80 VU trong không quá 10 giây, giữ 60 giây → 10 VU trong 2 phút. Cấu hình cuối phải dựa trên Load/Stress thực.
 
-Lưu ý provenance: raw JTL/HTML ngày 30/08 thuộc JMX ở commit `8897078` với counter cục bộ. File JMX hiện tại đã dùng UUID cho coupon; kết quả sau fix chỉ được công bố sau một rerun mới có raw JTL riêng.
+Lưu ý provenance: raw JTL/HTML ngày 30/08 thuộc JMX pre-fix với counter cục bộ và được giữ làm evidence chẩn đoán. Kết quả canonical bên dưới là rerun UUID ngày 03/09 với `run_id=SPIKE_UUID_20260903_01`.
 
 ### 9.2 Kết quả theo phase
 
 | Phase | Throughput | p95 | Error rate | CPU/RAM | Observation |
 | --- | ---: | ---: | ---: | --- | --- |
-| Pre-spike | 6,2400 samples/s | 17 ms | 0% | Một ảnh snapshot toàn scenario, không tách phase | 393 samples, không lỗi |
-| Spike | 29,9320 samples/s | 15 ms | 4,0777% | Một ảnh snapshot toàn scenario, không tách phase | 63/1.545 failures; coupon 63/241 failures |
-| Recovery | 6,1918 samples/s | 16 ms | 15,9898% | Một ảnh snapshot toàn scenario, không tách phase | 63/394 failures; toàn bộ 63 coupon request lỗi |
+| Pre-spike | 6,2253 samples/s | 15 ms | 0% | Không thu metric mới | 393 samples, không lỗi |
+| Spike | 29,6644 samples/s | 13 ms | 0% | Không thu metric mới | 1.537 samples, không lỗi trong burst 40 VU |
+| Recovery | 6,2506 samples/s | 20 ms | 0% | Không thu metric mới | 400 samples, không lỗi; p95 dưới tiêu chí 2.000 ms |
 
-Phase được tách deterministic theo prefix `threadName` bằng tùy chọn `--thread-prefix` của parser. JSON tương ứng nằm tại `results/spike-phase-analysis/pre-spike_analysis.json`, `spike_analysis.json` và `recovery_analysis.json`; tổng ba phase khớp whole-run 2.332 samples và 126 failures.
+Phase được tách deterministic theo prefix `threadName` bằng `--thread-prefix`. JSON nằm tại `results/rerun-uuid-20260903/spike/phase-analysis/`; tổng ba phase khớp whole-run 2.330 samples và 0 failures.
 
-Nguồn aggregate whole-run: raw JTL `results/23127104_Spike_20260830.jtl` (439.607 byte; SHA-256 `0DCF49DEDEF899ED570B545543F483535023DAEC89A23FE3127A8A2C1B7B3A23`) và parser JSON `results/23127104_Spike_20260830_analysis.json`. Command: `python -X utf8 agent-skill-kit/hw05-performance-testing/scripts/analyze_jtl.py results/23127104_Spike_20260830.jtl --output results/23127104_Spike_20260830_analysis.json` (exit code 0).
+Nguồn canonical: raw JTL `results/rerun-uuid-20260903/spike/23127104_Spike_UUID_20260903.jtl` (423.651 byte; SHA-256 `FE98B24EC73AE84E37DD07C23CE7F375DD5745B4FFBB2A078950BB273B9A0D92`), parser JSON `results/rerun-uuid-20260903/spike/analysis.json` và HTML report `results/rerun-uuid-20260903/spike/html-report/`.
 
 | Label / JSON path | Samples | Failures | Error rate | Throughput (samples/s) | Mean (ms) | Median (ms) | p90 (ms) | p95 (ms) | p99 (ms) | Max (ms) | Response codes |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| `1 - Login admin` | 416 | 0 | 0% | 2,2965 | 4,337 | 3,0 | 7,0 | 9,0 | 20,0 | 110,0 | 200: 416 |
-| `2 - GET admin users` | 400 | 0 | 0% | 2,2311 | 3,208 | 3,0 | 6,0 | 7,05 | 15,01 | 19,0 | 200: 400 |
-| `3 - GET coupons` | 391 | 0 | 0% | 2,2024 | 4,698 | 4,0 | 7,0 | 10,0 | 15,3 | 39,0 | 200: 391 |
-| `4 - POST create category` | 383 | 0 | 0% | 2,1856 | 10,540 | 10,0 | 16,0 | 17,0 | 21,36 | 28,0 | 200: 383 |
-| `5 - POST create product` | 375 | 0 | 0% | 2,1414 | 10,872 | 10,0 | 17,0 | 19,3 | 23,52 | 29,0 | 200: 375 |
-| `6 - POST create coupon` | 367 | 126 | 34,3324% | 2,1146 | 8,580 | 9,0 | 15,0 | 17,0 | 20,68 | 39,0 | 200: 241; 500: 126 |
-| `__overall__` | 2.332 | 126 | 5,4031% | 12,8737 | 6,941 | 6,0 | 13,0 | 16,0 | 21,69 | 110,0 | 200: 2.206; 500: 126 |
+| `1 - Login admin` | 410 | 0 | 0% | 2,2689 | 3,771 | 3,0 | 7,0 | 8,55 | 12,0 | 111,0 | 200: 410 |
+| `2 - GET admin users` | 400 | 0 | 0% | 2,2329 | 2,828 | 2,0 | 5,0 | 6,05 | 13,0 | 17,0 | 200: 400 |
+| `3 - GET coupons` | 392 | 0 | 0% | 2,2111 | 4,992 | 4,0 | 8,0 | 11,0 | 23,09 | 28,0 | 200: 392 |
+| `4 - POST create category` | 388 | 0 | 0% | 2,1890 | 9,222 | 8,0 | 14,0 | 17,65 | 23,13 | 38,0 | 200: 388 |
+| `5 - POST create product` | 374 | 0 | 0% | 2,1410 | 8,671 | 8,0 | 13,0 | 16,0 | 22,27 | 33,0 | 200: 374 |
+| `6 - POST create coupon` | 366 | 0 | 0% | 2,0994 | 10,407 | 9,0 | 15,0 | 19,0 | 26,35 | 210,0 | 200: 366 |
+| `__overall__` | 2.330 | 0 | 0% | 12,8438 | 6,551 | 6,0 | 12,0 | 15,0 | 22,0 | 210,0 | 200: 2.330 |
 
-Cross-check `results/spike-report/statistics.json` cho overall sample count 2.332, failure count 126 và p95 16 ms; cả ba delta bằng 0. `__overall__` không double-count vì JMX không có Transaction Controller parent sample, nhưng chỉ đại diện whole-run aggregate và không dùng để so pre-spike/spike/recovery.
+Cross-check `results/rerun-uuid-20260903/spike/html-report/statistics.json` khớp whole-run sample count 2.330, failure count 0 và p95 15 ms (delta 0). Rerun xác nhận 366/366 coupon request thành công.
 
-Recovery time và kết luận: run thất bại về reliability do overall error rate 5,4031%, tập trung hoàn toàn ở `POST create coupon`. Phase recovery có 63/394 failures (15,9898%) và 63/63 coupon requests lỗi, nên không đạt recovery criteria. Pattern đúng bằng 63 coupon tạo ở pre-spike và counter trong phiên bản đã chạy khởi tạo lại ở mỗi Thread Group cho thấy data collision, không chứng minh SUT quá tải. JMX hiện tại đã dùng UUID; cần rerun và thu server log trước khi đo recovery capacity. Xem [BUG-SPIKE-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/1).
+Recovery đạt criteria đã khai báo: trong phase recovery 8 VU, error rate trở về 0%, p95 20 ms (thấp hơn 2.000 ms) và throughput 6,2506 samples/s, tương đương pre-spike 6,2253 samples/s. Vì recovery phase bắt đầu ngay sau burst và toàn bộ phase đều đạt tiêu chí, dữ liệu chứng minh hệ thống phục hồi trong cửa sổ quan sát tối đa 1 phút; không có granularity đủ để tuyên bố số giây phục hồi chính xác hơn. Pre-fix run ngày 30/08 được giữ làm evidence của collision và không dùng làm verdict cuối.
 
 ## 10. Account lockout và state recovery
 
@@ -303,14 +300,14 @@ AI đã phân tích raw JTL Load, Stress, Spike và Soak bằng parser bắt bu�
 | C-LOAD-02 | Overall error rate là 0% và mọi response code là 200 | `__overall__.error_rate_percent`, `__overall__.response_codes` | 0%; 200: 2.516 | Measured fact | High | None |
 | C-LOAD-03 | Overall p95 elapsed là 17 ms | `__overall__.elapsed_ms.p95` | 17 ms | Measured fact | High | JMeter HTML dùng để cross-check |
 | C-LOAD-04 | Run ổn định theo HTTP/JTL tại workload đã chạy, nhưng chưa chứng minh capacity threshold | `__overall__` | 0% error; p95 17 ms; 7,6773 samples/s | Inference | Medium | Resource trend và các mức tải cao hơn |
-| C-SPIKE-01 | Spike whole-run có 2.332 samples, 126 failures và error rate 5,4031% | `results/23127104_Spike_20260830_analysis.json` → `__overall__` | 2.332; 126; 5,4031% | Measured fact | High | None |
-| C-SPIKE-02 | Mọi failure aggregate nằm ở POST create coupon | `6 - POST create coupon.failures`, các label khác `.failures` | 126; các label khác 0 | Measured fact | High | None |
-| C-SPIKE-03 | Coupon có 34,3324% lỗi và 126 HTTP 500 | `6 - POST create coupon.error_rate_percent`, `.response_codes` | 34,3324%; 500: 126 | Measured fact | High | Response body/server log cho root cause |
-| C-SPIKE-04 | Phase recovery không đạt reliability criteria, nhưng không thể quy cho overload | Phase JSON + executed JMX counter scope | Recovery 63/394 failures; coupon 63/63 failures | Inference | High | Rerun JMX UUID + resource/server evidence |
-| C-STRESS-01 | Stress whole-run có 15.445 samples, 1.680 failures và error rate 10,8773% | `results/23127104_Stress_20260830_analysis.json` → `__overall__` | 15.445; 1.680; 10,8773% | Measured fact | High | None |
-| C-STRESS-02 | Toàn bộ failures thuộc POST create coupon và là HTTP 500 | `6 - POST create coupon.failures`, `.response_codes`; label khác `.failures` | 1.680; 500: 1.680; label khác 0 | Measured fact | High | Server log cho SUT root cause |
-| C-STRESS-03 | Stage 2–5 coupon failures bằng coupon samples của stage ngay trước | Stage JSON coupon paths | 167=167; 338=338; 504=504; 671=671 | Measured fact | High | JMX data generator |
-| C-STRESS-04 | Stress capacity threshold không hợp lệ do test-data collision | Stage JSON + executed JMX counter expression | Stage 2–5 error 8,0911%→13,0596% | Inference | High | Rerun JMX UUID + resource trend |
+| C-SPIKE-01 | UUID rerun có 2.330 samples, 0 failures, error rate 0% và p95 15 ms | `results/rerun-uuid-20260903/spike/analysis.json` → `__overall__` | 2.330; 0; 0%; 15 ms | Measured fact | High | HTML cross-check |
+| C-SPIKE-02 | Burst 40 VU có 1.537 samples, 0 lỗi, p95 13 ms | Rerun phase `spike_analysis.json` → `__overall__` | 1.537; 0; 13 ms | Measured fact | High | None |
+| C-SPIKE-03 | Recovery đạt candidate criteria | Rerun phase `recovery_analysis.json` → `__overall__` | 400 samples; 0%; p95 20 ms; 6,2506 samples/s | Inference | High | Resource trend nếu cần root cause |
+| C-SPIKE-04 | UUID loại bỏ collision của pre-fix run | Coupon label rerun so với pre-fix | 0/366 so với 126/367 failures | Measured comparison | High | None |
+| C-STRESS-01 | UUID rerun có 15.397 samples, 0 failures, error rate 0% và p95 24 ms | `results/rerun-uuid-20260903/stress/analysis.json` → `__overall__` | 15.397; 0; 0%; 24 ms | Measured fact | High | HTML cross-check |
+| C-STRESS-02 | Cả năm stage đều 0% lỗi | Rerun stage JSON → `__overall__` | 0/0/0/0/0% | Measured fact | High | None |
+| C-STRESS-03 | Stage 5 là mức cao nhất đã test | `stage-5_analysis.json` → `__overall__` | 50 VU; 36,8904 samples/s; p95 31 ms; 0% lỗi | Measured fact | High | Resource trend |
+| C-STRESS-04 | Không thấy error-based breakpoint đến 50 VU; capacity tuyệt đối chưa xác định | Năm stage rerun + phạm vi workload | 10→50 VU, mọi stage 0% lỗi | Inference | High | Test trên 50 VU + resource trend |
 | C-SOAK-01 | Soak whole-run có 5.634 samples, 0 failures và error rate 0% | `results/23127104_Soak_20260830_analysis.json` → `__overall__` | 5.634; 0; 0% | Measured fact | High | None |
 | C-SOAK-02 | Overall p95 là 17 ms và throughput 7,8395 samples/s | `__overall__.elapsed_ms.p95`, `.throughput_samples_per_second` | 17 ms; 7,8395 samples/s | Measured fact | High | JMeter HTML cross-check |
 | C-SOAK-03 | Ba cửa sổ đều có p95 17 ms và 0 failures | Soak window JSON → `__overall__` | 17/17/17 ms; 0/0/0 failures | Measured fact | High | None |
@@ -325,12 +322,10 @@ AI đã phân tích raw JTL Load, Stress, Spike và Soak bằng parser bắt bu�
 | C-LOAD-02: 0% error, tất cả HTTP 200 | `__overall__`: 0%; 200: 2.516 | Correct | Không được diễn giải thành hệ thống không thể có lỗi ngoài phạm vi assertion/JTL |
 | C-LOAD-03: p95 overall 17 ms | `__overall__.elapsed_ms.p95`: 17 ms | Correct | Khớp JMeter HTML; delta bằng 0 |
 | C-LOAD-04: chưa đủ evidence cho capacity/root cause | Aggregate whole-run only | Correct/incomplete by design | Cần resource trend và nhiều mức tải để mở rộng kết luận |
-| C-SPIKE-01: 2.332 samples, 126 failures, 5,4031% error | `__overall__`: cùng giá trị | Correct | Khớp JMeter HTML; sample/failure delta 0 |
-| C-SPIKE-03: coupon 34,3324% lỗi, 126 HTTP 500 | Coupon: 367 samples, 126 failures; 200: 241, 500: 126 | Correct | Không diễn giải HTTP 500 nhanh thành performance tốt |
-| C-SPIKE-04: recovery không đạt nhưng chưa chứng minh overload | Recovery: 394 samples, 63 failures; coupon 63/63 failures | Correct sau khi bổ sung phase analysis | Collision trùng đúng 63 coupon pre-spike; phải rerun code duy nhất trước khi kết luận capacity |
-| C-STRESS-01: 15.445 samples, 1.680 failures, 10,8773% error | `__overall__`: cùng giá trị | Correct | Khớp JMeter HTML; sample/failure delta 0 |
-| C-STRESS-03: failure pattern chứng minh stage data collision | Coupon stage pairs: 167=167; 338=338; 504=504; 671=671 | Correct | Không gọi error response nhanh là capacity saturation |
-| C-STRESS-04: chưa được dùng run này làm capacity threshold | Stage 2–5 bị data collision | Correct | Sửa generator và rerun trước khi chọn breakpoint |
+| Pre-fix Spike: 2.332 samples, 126 failures, 5,4031% error | Pre-fix JSON khớp; UUID rerun: 2.330 samples, 0 failures | Correct cho attempt cũ, superseded cho verdict cuối | Rerun A/B xác nhận lỗi đến từ collision; dùng rerun làm kết quả performance cuối |
+| Pre-fix Spike recovery không đạt | Pre-fix: 63/394 failures; rerun: 0/400 failures, p95 20 ms | Superseded | UUID rerun đạt recovery criteria; không còn dùng pre-fix để đánh giá recovery |
+| Pre-fix Stress: 15.445 samples, 1.680 failures, 10,8773% error | Pre-fix JSON khớp; UUID rerun: 15.397 samples, 0 failures | Correct cho attempt cũ, superseded cho verdict cuối | Failure pattern là test-data defect, không phải saturation |
+| Pre-fix Stress threshold không hợp lệ | Rerun năm stage đều 0% lỗi; Stage 5 p95 31 ms, 36,8904 samples/s | Corrected | Xác nhận lower bound 50 VU; chưa có breakpoint tuyệt đối vì chưa test cao hơn và thiếu resource trend |
 | C-SOAK-01: 5.634 samples, 0 failures, 0% error | `__overall__`: cùng giá trị | Correct | Khớp JMeter HTML; sample/failure delta 0 |
 | C-SOAK-03: ba cửa sổ có p95 17 ms và 0 failures | Window JSON: cùng giá trị | Correct | Không suy p95 ổn định thành memory ổn định |
 | C-SOAK-04: chưa đủ evidence cho endurance threshold | Chỉ một resource screenshot | Correct | Báo rõ CPU/RAM trend và threshold chưa xác định; không nội suy từ một snapshot |
@@ -346,15 +341,15 @@ Misinterpretation hunt còn phát hiện bản nháp AI trong commit `8897078` �
 | Database index | Conditional | Cần slow query/query plan và workload read | Không khẳng định lợi ích nếu chưa có evidence |
 | SQLite WAL/batching writes | Conditional | Cần dấu hiệu write contention/disk/locking | Có thể phù hợp mutation-heavy workload nhưng phải benchmark A/B |
 | Connection pool | Unsupported until verified | Cần xem driver/access pattern | Không tự động phù hợp với SQLite chỉ vì phổ biến ở DB server |
-| Coupon code duy nhất xuyên mọi stage | Feasible/required | Failure count stage sau bằng coupon samples stage trước; executed JMX tái dùng counter | Đã đổi JMX hiện tại sang UUID; cần rerun A/B để xác minh |
+| Coupon code duy nhất xuyên mọi stage | Feasible/verified | Pre-fix có 1.680/126 failures; UUID rerun có 0/0 failures ở Stress/Spike | Fix đã được xác minh bằng A/B rerun; giữ UUID trong JMX |
 
 ## 13. Bugs và performance issues
 
 | ID/link | Loại | Summary | Evidence | Trạng thái |
 | --- | --- | --- | --- | --- |
 | Không ghi nhận trong Load run | Functional/performance | Không có failed sample, HTTP error, crash hoặc latency breach đã khai báo trong raw JTL | `results/23127104_Load_20260830_analysis.json`: `__overall__.failures = 0`, `error_rate_percent = 0`, `response_codes = {"200": 2516}`, p95 = 17 ms | Không tạo bug report/GitHub Issue |
-| [BUG-SPIKE-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/1) | Functional/test-data under concurrent load | `POST create coupon` trả 126 HTTP 500; root cause chưa xác nhận | Spike JSON: coupon error rate 34,3324%; overall 5,4031%; JMeter HTML cross-check delta 0 | Open – cần rerun payload duy nhất + server log |
-| [BUG-STRESS-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/2) | Test-script/test-data | Coupon counter reset giữa stage tạo 1.680 HTTP 500 và làm threshold không hợp lệ | Stage failure/sample pairs: 167=167; 338=338; 504=504; 671=671 | Fix UUID đã có trong JMX; chưa rerun xác minh |
+| [BUG-SPIKE-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/1) | Test-data defect; SUT duplicate handling chưa đánh giá | Pre-fix có 126 HTTP 500 do code bị dùng lại | UUID rerun: 2.330 samples, 0 failures; coupon 366/366 HTTP 200 | Fix verified; đóng phần test-script sau khi cập nhật GitHub Issue |
+| [BUG-STRESS-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/2) | Test-script/test-data | Counter reset giữa stage tạo 1.680 HTTP 500 giả | UUID rerun: 15.397 samples, 0 failures; cả năm stage 0% lỗi | Fix verified; đóng phần test-script sau khi cập nhật GitHub Issue |
 | Không ghi nhận trong Soak run | Functional/performance | Không có failed sample hoặc HTTP error; p95 ba cửa sổ không tăng | Soak JSON: 5.634 samples, 0 failures, p95 17 ms; window p95 17/17/17 ms | Không tạo bug report mới; threshold vẫn thiếu resource trend |
 
 Các sai lệch source đã biết chỉ được tạo Issue sau khi tái hiện trên đúng commit. Không báo một finding source-only như thể đã được quan sát trong performance run.
@@ -399,12 +394,12 @@ Xem [AI_CRITIQUE.md](AI_CRITIQUE.md). Bản critique dùng claim sai có thật 
 
 ## 16. Demo video
 
-Hai video chưa được quay. Kịch bản lời thoại, thao tác màn hình, lệnh chuẩn bị và checklist hậu kỳ nằm trong [docs/05_KICH_BAN_VIDEO_DEMO.md](../docs/05_KICH_BAN_VIDEO_DEMO.md):
+Hai video đã được upload lên YouTube:
 
-- Video 1 (ít nhất 6 phút): demo performance testing, resource monitor, kết quả và human correction.
-- Video 2: demo Agent Skill end-to-end, giải thích kiến trúc skill và từng bước skill thực hiện.
+- **Video 1 – Performance testing:** [https://youtu.be/6lmRExvkqj4](https://youtu.be/6lmRExvkqj4), thời lượng metadata 391 giây (6:31). Video trình bày performance testing, resource monitor, kết quả và human correction.
+- **Video 2 – Agent Skill:** [https://youtu.be/j8wR1m32oiw](https://youtu.be/j8wR1m32oiw), thời lượng metadata 549–550 giây (khoảng 9:09). Video demo Agent Skill end-to-end.
 
-Video URL: chưa có — sinh viên bổ sung URL YouTube unlisted thật sau khi quay; không được dùng URL giả.
+Hai URL và metadata tiêu đề/thời lượng được xác minh trực tiếp qua YouTube ngày 03/09/2026. Trạng thái privacy **Unlisted**, lời thuyết minh tiếng Việt và mức độ hiển thị tool/resource monitor cần người nộp mở lại bằng cửa sổ ẩn danh để kiểm tra thủ công trước khi đóng ZIP. Kịch bản gốc: [video performance](../docs/05_KICH_BAN_VIDEO_DEMO.md) và [video Agent Skill](../docs/06_KICH_BAN_VIDEO_AGENT_SKILL.md).
 
 ## 17. Human review tổng kết
 
@@ -418,25 +413,25 @@ Video URL: chưa có — sinh viên bổ sung URL YouTube unlisted thật sau kh
 
 ## 18. Kết luận và giới hạn
 
-Load run tại 10 VU ghi nhận 2.516 samples, 0% lỗi, p95 17 ms và 7,6773 samples/s. Soak 10 VU trong khoảng 12 phút cũng có 0% lỗi, p95 17 ms và throughput ổn định qua ba cửa sổ; tuy nhiên chưa thể gọi đây là endurance threshold vì chỉ có một resource snapshot và chưa thử nhiều mức tải. Stress/Spike không hợp lệ để xác định capacity hoặc overload: 1.680 và 126 lỗi HTTP 500 đều tập trung ở create coupon, với pattern counter reset giữa Thread Group xác nhận test-data collision. Phase recovery của Spike vì thế cũng không đo được khả năng hồi phục của SUT.
+Load run tại 10 VU ghi nhận 2.516 samples, 0% lỗi, p95 17 ms và 7,6773 samples/s. Soak 10 VU trong khoảng 12 phút cũng có 0% lỗi, p95 17 ms và throughput ổn định qua ba cửa sổ; tuy nhiên chưa thể gọi đây là endurance threshold tuyệt đối vì chỉ có một resource snapshot và chưa thử nhiều mức tải. UUID rerun đã khắc phục defect của Stress/Spike: Stress có 15.397 samples, 0 lỗi, p95 24 ms; cả năm stage đều 0% lỗi và Stage 5 tại 50 VU đạt 36,8904 samples/s, p95 31 ms. Spike có 2.330 samples, 0 lỗi, p95 15 ms; burst và recovery đều không lỗi, recovery p95 20 ms và throughput trở về mức pre-spike.
 
 Không có evidence đủ để tuyên bố bottleneck backend. Latency phía client thấp không thay thế CPU/RAM/disk trend, server log hay profiler. Bài học human review chính là mọi claim AI phải truy ngược về raw JTL/JSON và cấu hình JMX; một error rate cao có thể do test script chứ không phải saturation.
 
-Giới hạn: SUT và load generator chạy cùng máy qua localhost; resource screenshot chỉ là snapshot, không phải time series; soak ngắn; SQLite và dữ liệu mutation tăng dần; executed Spike plan từng để View Results Tree enabled; background processes không được định lượng; SUT commit SHA và run notes/server log chưa được lưu. JMX hiện tại đã dùng UUID và disable listener nặng, nhưng vẫn cần thu resource trend rồi rerun Stress/Spike trước khi công bố threshold.
+Giới hạn: SUT và load generator chạy cùng máy qua localhost; resource screenshot cũ chỉ là snapshot, không phải time series; rerun UUID không bổ sung ảnh/resource metric mới; soak ngắn; SQLite và dữ liệu mutation tăng dần; background processes không được định lượng; SUT commit SHA và run notes/server log chưa được lưu. Stress chỉ test đến 50 VU, nên 50 VU là lower bound đã xác minh chứ không phải capacity tối đa tuyệt đối.
 
 ## Phụ lục A – Artifact index
 
 | Artifact | Đường dẫn/link thực | Trạng thái |
 | --- | --- | --- |
 | Load JMX/CSV/JTL/HTML | `jmeter/23127104_Load_20260830.jmx`, `test-data/admin_credentials.csv`, `results/23127104_Load_20260830.jtl`, `results/load-report/` | Đã có |
-| Stress JMX/CSV/JTL/HTML | `jmeter/23127104_Stress_20260830.jmx`, `test-data/admin_credentials.csv`, `results/23127104_Stress_20260830.jtl`, `results/stress-report/` | Đã có; raw result thuộc pre-fix JMX commit `8897078`, current JMX chờ rerun |
-| Spike JMX/CSV/JTL/HTML | `jmeter/23127104_Spike_20260830.jmx`, `test-data/admin_credentials.csv`, `results/23127104_Spike_20260830.jtl`, `results/spike-report/` | Đã có; raw result thuộc pre-fix JMX commit `8897078`, current JMX chờ rerun |
+| Stress JMX/CSV/JTL/HTML | `jmeter/23127104_Stress_20260830.jmx`, `test-data/admin_credentials.csv`, `results/rerun-uuid-20260903/stress/` | UUID rerun canonical đã có; pre-fix JTL/report vẫn giữ riêng làm diagnostic evidence |
+| Spike JMX/CSV/JTL/HTML | `jmeter/23127104_Spike_20260830.jmx`, `test-data/admin_credentials.csv`, `results/rerun-uuid-20260903/spike/` | UUID rerun canonical đã có; pre-fix JTL/report vẫn giữ riêng làm diagnostic evidence |
 | Soak JTL/report | `jmeter/23127104_Soak_20260830.jmx`, `test-data/admin_credentials.csv`, `results/23127104_Soak_20260830.jtl`, `results/soak-report/` | Đã có |
 | Hardware/resource screenshots | `evidence/23127104_Hardware_20260830.png`, `evidence/23127104_Load_Evidence_20260830.png`, `evidence/23127104_Stress_Evidence_20260830.png`, `evidence/23127104_Spike_Evidence_20260830.png`, `evidence/23127104_Soak_Evidence_20260830.png` | Đã có |
 | Server logs/run notes | Không có trong repository | Thiếu; giới hạn root-cause analysis |
 | Bug report / GitHub Issues | `report/BUG_REPORT.md` ([BUG-SPIKE-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/1), [BUG-STRESS-001](https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/2)) | Local reports đã có; đã gắn GitHub Issue link |
-| Demo video | [Kịch bản hai video](../docs/05_KICH_BAN_VIDEO_DEMO.md); URL chưa có | Chưa quay — user action bắt buộc |
-| Git commit log text | `report/GIT_COMMIT_LOG.txt` | Có snapshot; phải export lại sau commit cuối |
+| Demo performance / Agent Skill | [Video performance](https://youtu.be/6lmRExvkqj4), [video Agent Skill](https://youtu.be/j8wR1m32oiw) | URL và thời lượng đã xác minh; privacy/nội dung cần human review cuối |
+| Git commit log text | `report/GIT_COMMIT_LOG.txt` | Có snapshot đến commit `37622e0`; phải export lại sau commit cuối |
 
 ## Phụ lục B – AI Audit Report
 

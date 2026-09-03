@@ -124,7 +124,7 @@ Mỗi tự động hóa phải giữ raw JTL bất biến và in rõ input, phư
 
 ## 7. Demo skill trong video
 
-Kịch bản lời thoại và thao tác chi tiết nằm tại [05_KICH_BAN_VIDEO_DEMO.md](05_KICH_BAN_VIDEO_DEMO.md), phần Video 2.
+Kịch bản lời thoại và thao tác chi tiết nằm tại [06_KICH_BAN_VIDEO_AGENT_SKILL.md](06_KICH_BAN_VIDEO_AGENT_SKILL.md). Video đã upload: [Demo Agent Skill HW05](https://youtu.be/j8wR1m32oiw), metadata khoảng 9:09.
 
 Để đáp ứng phần Agent Skill, demo end-to-end một endpoint group, ví dụ transactional:
 

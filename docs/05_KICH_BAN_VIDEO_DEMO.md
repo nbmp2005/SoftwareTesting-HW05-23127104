@@ -1,6 +1,10 @@
 # Kịch bản Video Demo – HW05 AI-Assisted Performance Testing
 **Nguyễn Bình Minh Phương – 23127104**
 
+> **Video đã xuất bản:** [https://youtu.be/6lmRExvkqj4](https://youtu.be/6lmRExvkqj4) — metadata YouTube xác nhận thời lượng 6:31 ngày 03/09/2026.
+>
+> **Cập nhật sau khi quay:** Stress và Spike đã được rerun bằng UUID ngày 03/09/2026, đều 0% lỗi. Các con số lỗi trong lời thoại bên dưới mô tả attempt pre-fix được quay trong video; kết quả canonical mới nằm tại `results/rerun-uuid-20260903/` và `report/MAIN_REPORT.md`.
+
 ---
 
 ## CHUẨN BỊ CHUNG TRƯỚC KHI BẬT RECORD
@@ -180,7 +184,7 @@ Vì vậy, bậc cao nhất thật sự ổn định theo HTTP/JTL là **bậc 1
 
 [Mở browser, truy cập `https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/2`]
 
-"Đây là **BUG-STRESS-001** — fix đã có: đổi sang `__UUID()`, nhưng chưa rerun để có kết quả mới."
+"Đây là **BUG-STRESS-001** — tại thời điểm quay, fix UUID chưa được rerun. Sau video, rerun đã xác nhận 15.397 samples và 0 lỗi."
 
 ---
 
@@ -220,7 +224,7 @@ C:\Users\cpshc\Downloads\apache-jmeter-5.6.3\apache-jmeter-5.6.3\bin\jmeter.bat 
 
 Pattern: 63 coupon đã tạo ở pre-spike → counter reset khi sang Thread Group recovery → 63 code cũ bị dùng lại. Đây xác nhận là **data collision, không phải SUT chưa phục hồi được**.
 
-Nếu không có lỗi test-data này, pre-spike và spike đều cho thấy backend xử lý được spike 5× tải — không có timeout hay crash. Cần rerun với UUID để có số liệu recovery time chính xác."
+Sau khi quay, rerun UUID đã xác nhận burst và recovery đều 0 lỗi; recovery p95 20 ms."
 
 [Mở `https://github.com/nbmp2005/SoftwareTesting-HW05-23127104/issues/1`]
 
@@ -307,8 +311,8 @@ Hệ thống của em ổn định ở mức **7,84 RPS**, RAM không tăng liê
 
 "Tóm lại:
 - **Load**: 10 VU, 0% lỗi, p95 17ms — ổn định.
-- **Stress**: 5 bậc, 1.680 lỗi HTTP 500 — do data collision coupon, không phải capacity breach.
-- **Spike**: 3 phase, 126 lỗi coupon — cùng root cause counter reset giữa Thread Group.
+- **Stress pre-fix trong video**: 5 bậc, 1.680 lỗi HTTP 500 do data collision; UUID rerun sau video có 0 lỗi.
+- **Spike pre-fix trong video**: 126 lỗi coupon do counter reset; UUID rerun sau video có 0 lỗi và đạt recovery criteria.
 - **Soak**: 12 phút, 0% lỗi, p95 17ms ổn định — ngưỡng endurance đo được là 7,84 RPS.
 
 Bài học lớn nhất: **mọi claim AI phải truy ngược về raw JTL và cấu hình JMX**. Error rate cao không tự động nghĩa SUT bị overload — phải phân tích pattern dữ liệu trước khi kết luận.
@@ -319,10 +323,10 @@ Cảm ơn thầy cô đã xem. Em là Nguyễn Bình Minh Phương, MSSV 2312710
 
 ## CHECKLIST HẬU KỲ
 
-- [ ] Video >= 6 phút, audio rõ không bị cắt đột ngột
+- [x] Video >= 6 phút (metadata: 6:31)
 - [ ] JMeter/terminal + Task Manager visible cùng frame khi đang chạy test
 - [ ] Đã quay đủ 3 mốc resource cho Soak (đầu, giữa, cuối)
-- [ ] Upload YouTube **Unlisted**
-- [ ] Cập nhật link YouTube vào `README.md` và `report/MAIN_REPORT.md` (Mục 16)
-- [ ] Cập nhật `report/SUBMISSION_CHECKLIST.md` đánh dấu done
+- [ ] Mở link bằng cửa sổ ẩn danh để xác nhận privacy **Unlisted** và audio tiếng Việt rõ
+- [x] Cập nhật link YouTube vào `README.md` và `report/MAIN_REPORT.md` (Mục 16)
+- [x] Cập nhật `report/SUBMISSION_CHECKLIST.md`
 - [ ] Commit cuối: `docs: add demo video links`

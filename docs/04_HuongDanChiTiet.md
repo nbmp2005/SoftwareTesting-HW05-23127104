@@ -4,7 +4,7 @@ Bạn có thể hiểu bài này như sau:
 
 > Dùng JMeter giả lập nhiều admin cùng thực hiện một chuỗi API, chạy chuỗi đó theo ba kiểu tải khác nhau, thu bằng chứng thật, nhờ AI phân tích kết quả, sau đó tự kiểm tra và sửa nhận định của AI.
 
-Hiện repository mới có khung báo cáo và hướng dẫn; các file chạy thật như JMX, JTL, HTML report, ảnh và video vẫn phải được tạo từ quá trình thực hiện thật.
+Repository hiện đã có JMX, raw JTL, HTML report, ảnh hardware/resource và hai video thật. Đây vẫn là tài liệu hướng dẫn quy trình; trạng thái artifact và các mục còn thiếu được chốt tại [SUBMISSION_CHECKLIST.md](../report/SUBMISSION_CHECKLIST.md).
 
 ## 1. Cuối bài phải có những gì?
 
@@ -21,7 +21,8 @@ Bạn cần tạo tối thiểu:
 | AI Critique | Đoạn 200–300 từ |
 | Continuous testing | Flowchart và phần phân tích chi phí/false alarm |
 | Agent Skill | Skill trong repo + đoạn demo sử dụng |
-| Video | YouTube Unlisted, ít nhất 6 phút, nói tiếng Việt |
+| Video performance | [YouTube – 6:31](https://youtu.be/6lmRExvkqj4); người nộp kiểm tra lại Unlisted, tiếng Việt và cùng-frame |
+| Video Agent Skill | [YouTube – khoảng 9:09](https://youtu.be/j8wR1m32oiw); người nộp kiểm tra lại nội dung end-to-end |
 | Git | Nhiều commit theo từng bước + file git log |
 | Báo cáo | Markdown và PDF |
 | Đóng gói | `23127104_HW05_AI_Performance_NNN.zip` |
